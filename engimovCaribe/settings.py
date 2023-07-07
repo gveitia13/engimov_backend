@@ -26,8 +26,10 @@ SECRET_KEY = 'django-insecure-btr7+_f$(v@!04+gh7wx3wgo5lgwl794uaa2hbs6p3*%bypx84
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
-
+ALLOWED_HOSTS = ['*']
+CORS_ORIGIN_ALLOW_ALL = True
+CORS_ALLOW_CREDENTIALS = True
+CSRF_TRUSTED_ORIGINS = ['https://*.127.0.0.1',]
 
 # Application definition
 
@@ -83,17 +85,24 @@ WSGI_APPLICATION = 'engimovCaribe.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql',
+#         'NAME': 'engimov',
+#         'USER': 'blinit10', #USE YOUR OWN USERNAME
+#         'PASSWORD': 'rootzenBL*123', #USE YOUR OWN PASSWORD
+#         'HOST': 'localhost',
+#         'PORT': '3308',
+#         'OPTIONS': {
+#             'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
+#         },
+#     }
+# }
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'engimov',
-        'USER': 'blinit10', #USE YOUR OWN USERNAME
-        'PASSWORD': 'rootzenBL*123', #USE YOUR OWN PASSWORD
-        'HOST': 'localhost',
-        'PORT': '3308',
-        'OPTIONS': {
-            'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
-        },
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
 

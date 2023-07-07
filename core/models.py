@@ -30,6 +30,9 @@ class Product(models.Model):
     price = models.FloatField(verbose_name=_('Price'))
     visible = models.BooleanField(verbose_name=_('Visibility'))
 
+    def __str__(self):
+        return '{}'.format(self.name)
+
     class Meta:
         verbose_name = _('Product')
         verbose_name_plural = _('Products')
@@ -40,6 +43,9 @@ class Work(models.Model):
     description = models.TextField(verbose_name=_('Description'))
     image = models.ImageField(upload_to='products/', verbose_name=_('Images'))
 
+    def __str__(self):
+        return '{}'.format(self.name)
+
     class Meta:
         verbose_name = _('Work')
         verbose_name_plural = _('Works')
@@ -49,6 +55,9 @@ class Testimonial(models.Model):
     name = models.CharField(max_length=255, verbose_name=_('Name'))
     link = models.URLField(verbose_name=_('Link'), null=True, blank=True, help_text=_('Optional'))
     testimonial = models.TextField(verbose_name=_('Testimonial'))
+
+    def __str__(self):
+        return '{}'.format(self.name)
 
     class Meta:
         verbose_name = _('Testimonial')
