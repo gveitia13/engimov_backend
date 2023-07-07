@@ -12,26 +12,26 @@ class StandardResultsSetPagination(pagination.PageNumberPagination):
     max_page_size = 1000
 
 class ProductCategoryViewSet(viewsets.ModelViewSet):
-    queryset = ProductCategory.objects.all()
+    queryset = ProductCategory.objects.order_by('-id')
     serializer_class = ProductCategorySerializer
     pagination_class = StandardResultsSetPagination
 
 class WorkCategoryViewSet(viewsets.ModelViewSet):
-    queryset = WorkCategory.objects.all()
+    queryset = WorkCategory.objects.order_by('-id')
     serializer_class = WorkCategorySerializer
     pagination_class = StandardResultsSetPagination
 
 class ProductViewSet(viewsets.ModelViewSet):
-    queryset = Product.objects.all()
+    queryset = Product.objects.filter(visible=True).order_by('sku')
     serializer_class = ProductSerializer
     pagination_class = StandardResultsSetPagination
 
 class WorkViewSet(viewsets.ModelViewSet):
-    queryset = Work.objects.all()
+    queryset = Work.objects.order_by('-id')
     serializer_class = WorkSerializer
     pagination_class = StandardResultsSetPagination
 
 class TestimonialViewSet(viewsets.ModelViewSet):
-    queryset = Testimonial.objects.all()
+    queryset = Testimonial.objects.order_by('-id')
     serializer_class = TestimonialSerializer
     pagination_class = StandardResultsSetPagination

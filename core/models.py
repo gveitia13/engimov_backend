@@ -28,7 +28,7 @@ class Product(models.Model):
     description = models.TextField(verbose_name=_('Description'))
     image = models.ImageField(upload_to='products/', verbose_name=_('Images'))
     price = models.FloatField(verbose_name=_('Price'))
-    visibilidad = models.BooleanField(verbose_name=_('Visibility'))
+    visible = models.BooleanField(verbose_name=_('Visibility'))
 
     class Meta:
         verbose_name = _('Product')

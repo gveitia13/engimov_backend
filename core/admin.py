@@ -14,8 +14,8 @@ class WorkCategoryAdmin(admin.ModelAdmin):
     search_fields = ('name',)
 
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ('sku', 'name', 'category', 'price', 'visibilidad')
-    list_filter = ('category', 'visibilidad')
+    list_display = ('sku', 'name', 'category', 'price', 'visible')
+    list_filter = ('category', 'visible')
     search_fields = ('sku', 'name')
 
 class WorkAdmin(admin.ModelAdmin):

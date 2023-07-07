@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'core.apps.CoreConfig',
+    'sections.apps.SectionsConfig',
     #third party apps
     'django_q',
     'rest_framework',
