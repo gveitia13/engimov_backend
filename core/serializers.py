@@ -14,7 +14,7 @@ class WorkCategorySerializer(serializers.ModelSerializer):
 class ProductSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product
-        fields = ('sku', 'category', 'name', 'description', 'image', 'price', 'visibilidad')
+        fields = ('sku', 'category', 'name', 'description', 'image', 'price', 'visible')
 
 class WorkSerializer(serializers.ModelSerializer):
     class Meta:
