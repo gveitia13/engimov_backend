@@ -1,10 +1,8 @@
 from rest_framework import viewsets, pagination
 from .models import ProductCategory, WorkCategory, Product, Work, Testimonial
 from .serializers import ProductCategorySerializer, WorkCategorySerializer, ProductSerializer, WorkSerializer, TestimonialSerializer
-from rest_framework_simplejwt.views import TokenObtainPairView
 
-class ObtainJWTView(TokenObtainPairView):
-    pass
+
 
 class StandardResultsSetPagination(pagination.PageNumberPagination):
     page_size = 10

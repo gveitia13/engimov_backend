@@ -187,39 +187,6 @@ Q_CLUSTER = {
     'orm': 'default'
 }
 
-REST_FRAMEWORK = {
-    'DEFAULT_PERMISSION_CLASSES': (
-        'rest_framework.permissions.IsAuthenticated',
-    ),
-    'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
-    ),
-}
-
-SIMPLE_JWT = {
-    'ALGORITHM': 'HS256',
-    'SIGNING_KEY': SECRET_KEY,
-    'VERIFYING_KEY': None,
-    'ACCESS_TOKEN_LIFETIME': datetime.timedelta(minutes=800),
-    'REFRESH_TOKEN_LIFETIME': datetime.timedelta(days=2),
-}
-
-SWAGGER_SETTINGS = {
-    'SECURITY_DEFINITIONS': {
-        'Bearer': {
-            'type': 'apiKey',
-            'scheme': 'Bearer',
-            'name': 'Authorization',
-            'in': 'header'
-        },
-        'X-Api-Key': {
-            'type': 'apiKey',
-            'name': 'X-Api-Key',
-            'in': 'header'
-        },
-    },
-}
-
 
 #DJANGO SOLO
 SOLO_ADMIN_SKIP_OBJECT_LIST_PAGE = True
