@@ -10,5 +10,5 @@ router.register('works', WorkViewSet)
 router.register('testimonials', TestimonialViewSet)
 
 urlpatterns = [
-    path('api/', include(router.urls)),
+    path('core/', include(router.urls)),
 ]

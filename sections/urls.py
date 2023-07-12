@@ -14,5 +14,5 @@ router.register('sell', SellProductsSectionViewSet)
 router.register('contact', ContactUsSectionViewSet)
 
 urlpatterns = [
-    path('api/', include(router.urls)),
+    path('sections/', include(router.urls)),
 ]
