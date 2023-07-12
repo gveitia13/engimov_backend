@@ -27,9 +27,9 @@ SECRET_KEY = 'django-insecure-btr7+_f$(v@!04+gh7wx3wgo5lgwl794uaa2hbs6p3*%bypx84
 DEBUG = True
 
 ALLOWED_HOSTS = ['*']
-CORS_ORIGIN_ALLOW_ALL = True
-CORS_ALLOW_CREDENTIALS = True
-CSRF_TRUSTED_ORIGINS = ['https://*.127.0.0.1', 'https://*.render.com', 'https://*.onrender.com']
+# CORS_ORIGIN_ALLOW_ALL = True
+# CORS_ALLOW_CREDENTIALS = True
+# CSRF_TRUSTED_ORIGINS = ['https://*.127.0.0.1', 'https://*.render.com', 'https://*.onrender.com']
 
 # Application definition
 
