@@ -1,7 +1,7 @@
 from rest_framework import viewsets, pagination
-from .models import ProductCategory, WorkCategory, Product, Work, Testimonial
-from .serializers import ProductCategorySerializer, WorkCategorySerializer, ProductSerializer, WorkSerializer, TestimonialSerializer
-
+from .models import ProductCategory, WorkCategory, Product, Work, Testimonial, EnterpriseData
+from .serializers import ProductCategorySerializer, WorkCategorySerializer, ProductSerializer, WorkSerializer, \
+    TestimonialSerializer, EnterpriseDataSerializer
 
 
 class StandardResultsSetPagination(pagination.PageNumberPagination):
@@ -33,3 +33,7 @@ class TestimonialViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Testimonial.objects.order_by('-id')
     serializer_class = TestimonialSerializer
     pagination_class = StandardResultsSetPagination
+
+class EnterpriseDataViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = EnterpriseData.objects.order_by('-id')
+    serializer_class = EnterpriseDataSerializer

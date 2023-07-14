@@ -1,5 +1,7 @@
 from rest_framework import serializers
-from .models import ProductCategory, WorkCategory, Product, Work, Testimonial
+from .models import ProductCategory, WorkCategory, Product, Work, Testimonial, EnterpriseAditionalContact, \
+    EnterpriseData
+
 
 class ProductCategorySerializer(serializers.ModelSerializer):
     class Meta:
@@ -28,5 +30,17 @@ class WorkSerializer(serializers.ModelSerializer):
         model = Work
         fields = ('id', 'category', 'name', 'description', 'image', 'testimonials')
         depth = 1
+
+class EnterpriseAditionalContactSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = EnterpriseAditionalContact
+        fields = ('contact_type', 'contact', 'contact_aditional_info')
+
+class EnterpriseDataSerializer(serializers.ModelSerializer):
+    enterpriseaditionalcontact_set = EnterpriseAditionalContactSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = EnterpriseData
+        fields = ('enterprise_name', 'location', 'email', 'tel', 'address', 'enterpriseaditionalcontact_set')
 
 
