@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from .models import ProductCategory, WorkCategory, Product, Work, Testimonial, EnterpriseAditionalContact, \
-    EnterpriseData
+    EnterpriseData, Contact
 
 
 class ProductCategorySerializer(serializers.ModelSerializer):
@@ -42,5 +42,10 @@ class EnterpriseDataSerializer(serializers.ModelSerializer):
     class Meta:
         model = EnterpriseData
         fields = ('enterprise_name', 'location', 'email', 'tel', 'address', 'enterpriseaditionalcontact_set')
+
+class ContactSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Contact
+        fields = ('name', 'email', 'subject', 'text')
 
 

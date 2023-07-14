@@ -103,3 +103,17 @@ class EnterpriseAditionalContact(models.Model):
         verbose_name = _('Enterprise Aditional Contact')
         verbose_name_plural = _('Enterprise Aditional Contacts')
 
+class Contact(models.Model):
+    name = models.CharField(max_length=255, verbose_name=_('Name'))
+    email = models.EmailField(verbose_name=_('Email'))
+    subject = models.CharField(max_length=255, verbose_name=_('Subject'))
+    text = models.TextField(verbose_name=_('Text'))
+
+    def __str__(self):
+        return '{}'.format(self.name)
+
+    class Meta:
+        verbose_name = _('Contact')
+        verbose_name_plural = _('Contacts')
+
+

@@ -1,6 +1,6 @@
 from django.contrib import admin
 from .models import ProductCategory, WorkCategory, Product, Work, Testimonial, EnterpriseData, \
-    EnterpriseAditionalContact
+    EnterpriseAditionalContact, Contact
 from solo.admin import SingletonModelAdmin
 
 
@@ -33,6 +33,11 @@ class WorkAdmin(admin.ModelAdmin):
 
 class EnterpriseDataAdmin(SingletonModelAdmin):
     inlines = [EnterpriseAditionalContactInLine]
+
+@admin.register(Contact)
+class ContactAdmin(admin.ModelAdmin):
+    list_display = ('name', 'email', 'subject')
+    search_fields = ('name', 'email', 'subject')
 
 admin.site.register(ProductCategory, ProductCategoryAdmin)
 admin.site.register(WorkCategory, WorkCategoryAdmin)

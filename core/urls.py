@@ -1,7 +1,7 @@
 from django.urls import path, include
 from rest_framework import routers
 from .api import ProductCategoryViewSet, WorkCategoryViewSet, ProductViewSet, WorkViewSet, TestimonialViewSet, \
-    EnterpriseDataViewSet
+    EnterpriseDataViewSet, create_contact
 
 router = routers.DefaultRouter()
 router.register('productcategories', ProductCategoryViewSet)
@@ -13,4 +13,5 @@ router.register('enterprise_data', EnterpriseDataViewSet)
 
 urlpatterns = [
     path('core/', include(router.urls)),
+    path('core/contacts/', create_contact, name='create_contact'),
 ]
