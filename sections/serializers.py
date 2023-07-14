@@ -12,7 +12,8 @@ class IndexSectionSerializer(serializers.ModelSerializer):
 class AboutUsSectionSerializer(serializers.ModelSerializer):
     class Meta:
         model = AboutUsSection
-        fields = ('title', 'subtitle', 'image')
+        fields = ('title', 'subtitle', 'image', 'aboutussectionperks_set')
+        depth = 1
 
 
 class ProductsPortfolioSectionSerializer(serializers.ModelSerializer):
