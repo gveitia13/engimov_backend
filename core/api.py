@@ -1,4 +1,7 @@
 from rest_framework import viewsets, pagination
+from rest_framework.pagination import PageNumberPagination
+from rest_framework.views import APIView
+
 from .models import ProductCategory, WorkCategory, Product, Work, Testimonial, EnterpriseData
 from .serializers import ProductCategorySerializer, WorkCategorySerializer, ProductSerializer, WorkSerializer, \
     TestimonialSerializer, EnterpriseDataSerializer, ContactSerializer
@@ -9,6 +12,11 @@ from rest_framework.response import Response
 
 class StandardResultsSetPagination(pagination.PageNumberPagination):
     page_size = 10
+    page_size_query_param = 'page_size'
+    max_page_size = 1000
+
+class SearchResultsSetPagination(pagination.PageNumberPagination):
+    page_size = 25
     page_size_query_param = 'page_size'
     max_page_size = 1000
 
@@ -48,3 +56,28 @@ def create_contact(request):
         serializer.save()
         return Response(serializer.data, status=status.HTTP_201_CREATED)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class SearchPreviewView(APIView):
+    def get(self, request, query):
+        # Get the top 5 matching products
+        products = Product.objects.filter(name__icontains=query)[:5]
+        serialized_products = ProductSerializer(products, many=True).data
+        # Return the results as a JSON response
+        data = {
+            'products': serialized_products,
+        }
+        return Response(data)
+
+class SearchView(APIView):
+    def get(self, request, query):
+        # Get all the matching products
+        products = Product.objects.filter(name__icontains=query).order_by('pk')
+
+        # Paginate the results
+        paginator = SearchResultsSetPagination()
+        print(paginator.page_size)
+        paginated_products = paginator.paginate_queryset(products, request)
+        serialized_products = ProductSerializer(paginated_products, many=True).data
+
+        # Return the paginated results as a JSON response
+        return paginator.get_paginated_response(serialized_products)
