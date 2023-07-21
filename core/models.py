@@ -46,7 +46,7 @@ class Work(models.Model):
     category = models.ForeignKey(WorkCategory, on_delete=models.CASCADE, verbose_name=_('Category'))
     name = models.CharField(max_length=255, verbose_name=_('Name'))
     description = models.TextField(verbose_name=_('Description'))
-    image = models.ImageField(upload_to='products/', verbose_name=_('Images'))
+    image = models.ImageField(upload_to='works/', verbose_name=_('Images'))
 
     def __str__(self):
         return '{}'.format(self.name)
