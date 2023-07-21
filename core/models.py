@@ -76,6 +76,10 @@ class EnterpriseData(SingletonModel):
     email = models.EmailField(verbose_name=_('Enterprise Main Email'))
     tel = models.CharField(max_length=255, verbose_name=_('Enterprise Main Phone Number'))
     address = models.TextField(verbose_name=_('Enterprise Address'))
+    facebook = models.CharField(max_length=500, verbose_name=_('Enterprise Facebook Page'), null=True, blank=True, help_text=_('Optional'))
+    twitter = models.CharField(max_length=500, verbose_name=_('Enterprise Twitter Page'), null=True, blank=True, help_text=_('Optional'))
+    youtube = models.CharField(max_length=500, verbose_name=_('Enterprise Youtube Page'), null=True, blank=True, help_text=_('Optional'))
+
 
     def __str__(self):
         return "{}".format(self.enterprise_name)
