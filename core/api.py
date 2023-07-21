@@ -15,39 +15,47 @@ class StandardResultsSetPagination(pagination.PageNumberPagination):
     page_size_query_param = 'page_size'
     max_page_size = 1000
 
+
 class SearchResultsSetPagination(pagination.PageNumberPagination):
     page_size = 25
     page_size_query_param = 'page_size'
     max_page_size = 1000
+
 
 class ProductCategoryViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = ProductCategory.objects.order_by('-id')
     serializer_class = ProductCategorySerializer
     pagination_class = StandardResultsSetPagination
 
+
 class WorkCategoryViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = WorkCategory.objects.order_by('-id')
     serializer_class = WorkCategorySerializer
     pagination_class = StandardResultsSetPagination
+
 
 class ProductViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Product.objects.filter(visible=True).order_by('sku')
     serializer_class = ProductSerializer
     pagination_class = StandardResultsSetPagination
 
+
 class WorkViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Work.objects.order_by('-id')
     serializer_class = WorkSerializer
     pagination_class = StandardResultsSetPagination
+
 
 class TestimonialViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Testimonial.objects.order_by('-id')
     serializer_class = TestimonialSerializer
     pagination_class = StandardResultsSetPagination
 
+
 class EnterpriseDataViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = EnterpriseData.objects.order_by('-id')
     serializer_class = EnterpriseDataSerializer
+
 
 @api_view(['POST'])
 def create_contact(request):
@@ -56,6 +64,7 @@ def create_contact(request):
         serializer.save()
         return Response(serializer.data, status=status.HTTP_201_CREATED)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 class SearchPreviewView(APIView):
     def get(self, request, query):
@@ -68,16 +77,34 @@ class SearchPreviewView(APIView):
         }
         return Response(data)
 
+
 class SearchView(APIView):
     def get(self, request, query):
-        # Get all the matching products
+        # Get all the matching products and works
         products = Product.objects.filter(name__icontains=query).order_by('pk')
+        works = Work.objects.filter(name__icontains=query).order_by('pk')
 
-        # Paginate the results
-        paginator = SearchResultsSetPagination()
-        print(paginator.page_size)
-        paginated_products = paginator.paginate_queryset(products, request)
+        # Paginate the products
+        product_paginator = SearchResultsSetPagination()
+        paginated_products = product_paginator.paginate_queryset(products, request)
         serialized_products = ProductSerializer(paginated_products, many=True).data
 
+        # Paginate the works
+        work_paginator = SearchResultsSetPagination()
+        paginated_works = work_paginator.paginate_queryset(works, request)
+        serialized_works = WorkSerializer(paginated_works, many=True).data
+
         # Return the paginated results as a JSON response
-        return paginator.get_paginated_response(serialized_products)
+        return Response({
+            'products': {
+                'results': serialized_products,
+                'next': product_paginator.get_next_link(),
+                'previous': product_paginator.get_previous_link(),
+            },
+            'works': {
+                'results': serialized_works,
+                'next': work_paginator.get_next_link(),
+                'previous': work_paginator.get_previous_link(),
+            },
+        })
+
