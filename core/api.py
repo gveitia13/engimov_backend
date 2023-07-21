@@ -25,13 +25,13 @@ class SearchResultsSetPagination(pagination.PageNumberPagination):
 class ProductCategoryViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = ProductCategory.objects.order_by('-id')
     serializer_class = ProductCategorySerializer
-    pagination_class = StandardResultsSetPagination
+    # pagination_class = StandardResultsSetPagination
 
 
 class WorkCategoryViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = WorkCategory.objects.order_by('-id')
     serializer_class = WorkCategorySerializer
-    pagination_class = StandardResultsSetPagination
+    # pagination_class = StandardResultsSetPagination
 
 
 class ProductViewSet(viewsets.ReadOnlyModelViewSet):
