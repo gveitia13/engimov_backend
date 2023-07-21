@@ -50,7 +50,7 @@ class EnterpriseDataSerializer(serializers.ModelSerializer):
         model = EnterpriseData
         fields = (
         'enterprise_name', 'location', 'email', 'tel', 'address', 'enterpriseaditionalcontact_set', 'facebook',
-        'twitter', 'youtube')
+        'twitter', 'youtube', 'instagram')
 
 
 class ContactSerializer(serializers.ModelSerializer):
