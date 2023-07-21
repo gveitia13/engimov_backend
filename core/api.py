@@ -108,3 +108,18 @@ class SearchView(APIView):
             },
         })
 
+class CountView(APIView):
+    def get(self, request):
+        # Get the counts of products, works, product categories, and work categories
+        product_count = Product.objects.count()
+        work_count = Work.objects.count()
+        product_category_count = ProductCategory.objects.count()
+        work_category_count = WorkCategory.objects.count()
+
+        # Return the counts as a JSON response
+        return Response({
+            'products': product_count,
+            'works': work_count,
+            'product_categories': product_category_count,
+            'work_categories': work_category_count,
+        })

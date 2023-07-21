@@ -1,7 +1,7 @@
 from django.urls import path, include
 from rest_framework import routers
 from .api import ProductCategoryViewSet, WorkCategoryViewSet, ProductViewSet, WorkViewSet, TestimonialViewSet, \
-    EnterpriseDataViewSet, create_contact, SearchPreviewView, SearchView
+    EnterpriseDataViewSet, create_contact, SearchPreviewView, SearchView, CountView
 
 router = routers.DefaultRouter()
 router.register('productcategories', ProductCategoryViewSet)
@@ -16,4 +16,5 @@ urlpatterns = [
     path('core/contacts/', create_contact, name='create_contact'),
     path('search/<str:query>/preview', SearchPreviewView.as_view()),
     path('search/<str:query>', SearchView.as_view()),
+    path('counts', CountView.as_view()),
 ]
