@@ -23,33 +23,45 @@ class SearchResultsSetPagination(pagination.PageNumberPagination):
 
 
 class ProductCategoryViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = ProductCategory.objects.order_by('-id')
+    queryset = ProductCategory.objects.filter(product__in=Product.objects.filter(visible=True, )).distinct().order_by(
+        '-id')
     serializer_class = ProductCategorySerializer
     # pagination_class = StandardResultsSetPagination
 
 
+class ProductInSaleCategoryViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = ProductCategory.objects.filter(
+        product__in=Product.objects.filter(visible=True, is_sale=True)).distinct().order_by('-id')
+    serializer_class = ProductCategorySerializer
+
+
 class WorkCategoryViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = WorkCategory.objects.order_by('-id')
+    queryset = WorkCategory.objects.filter(work__in=Work.objects.all()).distinct().order_by('-id')
     serializer_class = WorkCategorySerializer
     # pagination_class = StandardResultsSetPagination
 
 
 class ProductViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = Product.objects.filter(visible=True).order_by('sku')
+    queryset = Product.objects.filter(visible=True, is_sale=False).order_by('sku')
     serializer_class = ProductSerializer
-    pagination_class = StandardResultsSetPagination
+    # pagination_class = StandardResultsSetPagination
+
+
+class ProductSaleViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = Product.objects.filter(visible=True, is_sale=True).order_by('sku')
+    serializer_class = ProductSerializer
 
 
 class WorkViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Work.objects.order_by('-id')
     serializer_class = WorkSerializer
-    pagination_class = StandardResultsSetPagination
+    # pagination_class = StandardResultsSetPagination
 
 
 class TestimonialViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Testimonial.objects.order_by('-id')
     serializer_class = TestimonialSerializer
-    pagination_class = StandardResultsSetPagination
+    # pagination_class = StandardResultsSetPagination
 
 
 class EnterpriseDataViewSet(viewsets.ReadOnlyModelViewSet):
@@ -107,6 +119,7 @@ class SearchView(APIView):
                 'previous': work_paginator.get_previous_link(),
             },
         })
+
 
 class CountView(APIView):
     def get(self, request):

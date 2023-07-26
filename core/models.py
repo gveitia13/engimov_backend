@@ -33,6 +33,7 @@ class Product(models.Model):
     image = models.ImageField(upload_to='products/', verbose_name=_('Images'))
     price = models.FloatField(verbose_name=_('Price'))
     visible = models.BooleanField(verbose_name=_('Visibility'))
+    is_sale = models.BooleanField(_('En venta'), default=False)
 
     def __str__(self):
         return '{}'.format(self.name)

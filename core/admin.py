@@ -8,22 +8,29 @@ class TestimonialInline(admin.TabularInline):
     model = Testimonial
     extra = 0
 
+
 class EnterpriseAditionalContactInLine(admin.TabularInline):
     model = EnterpriseAditionalContact
     extra = 0
+
 
 class ProductCategoryAdmin(admin.ModelAdmin):
     list_display = ('name',)
     search_fields = ('name',)
 
+
 class WorkCategoryAdmin(admin.ModelAdmin):
     list_display = ('name',)
     search_fields = ('name',)
 
+
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ('sku', 'name', 'category', 'price', 'visible')
-    list_filter = ('category', 'visible')
+    list_display = ('sku', 'name', 'category', 'price', 'is_sale', 'visible')
+    list_filter = ('category', 'visible', 'is_sale')
     search_fields = ('sku', 'name')
+    list_editable = ('is_sale', 'visible')
+    ordering = ('-visible', '-is_sale')
+
 
 class WorkAdmin(admin.ModelAdmin):
     list_display = ('name', 'category')
@@ -31,13 +38,16 @@ class WorkAdmin(admin.ModelAdmin):
     search_fields = ('name',)
     inlines = [TestimonialInline]
 
+
 class EnterpriseDataAdmin(SingletonModelAdmin):
     inlines = [EnterpriseAditionalContactInLine]
+
 
 @admin.register(Contact)
 class ContactAdmin(admin.ModelAdmin):
     list_display = ('name', 'email', 'subject')
     search_fields = ('name', 'email', 'subject')
+
 
 admin.site.register(ProductCategory, ProductCategoryAdmin)
 admin.site.register(WorkCategory, WorkCategoryAdmin)

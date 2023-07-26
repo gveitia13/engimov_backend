@@ -1,12 +1,15 @@
 from django.urls import path, include
 from rest_framework import routers
 from .api import ProductCategoryViewSet, WorkCategoryViewSet, ProductViewSet, WorkViewSet, TestimonialViewSet, \
-    EnterpriseDataViewSet, create_contact, SearchPreviewView, SearchView, CountView
+    EnterpriseDataViewSet, create_contact, SearchPreviewView, SearchView, CountView, ProductInSaleCategoryViewSet, \
+    ProductSaleViewSet
 
 router = routers.DefaultRouter()
 router.register('productcategories', ProductCategoryViewSet)
 router.register('workcategories', WorkCategoryViewSet)
 router.register('products', ProductViewSet)
+router.register('products_sale', ProductSaleViewSet)
+router.register('productcategories_sale', ProductInSaleCategoryViewSet)
 router.register('works', WorkViewSet)
 router.register('testimonials', TestimonialViewSet)
 router.register('enterprise_data', EnterpriseDataViewSet)
