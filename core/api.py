@@ -136,3 +136,5 @@ class CountView(APIView):
             'product_categories': product_category_count,
             'work_categories': work_category_count,
         })
+
+
