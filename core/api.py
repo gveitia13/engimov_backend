@@ -49,11 +49,35 @@ class WorkCategoryViewSet(viewsets.ReadOnlyModelViewSet):
     # pagination_class = StandardResultsSetPagination
 
 
-class ProductViewSet(viewsets.ReadOnlyModelViewSet):
+class BaseProductViewSet(viewsets.ReadOnlyModelViewSet):
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        price = self.request.query_params.get('price')
+        priceup = self.request.query_params.get('priceup')
+        pricedown = self.request.query_params.get('pricedown')
+        category = self.request.query_params.get('category')
+        order = self.request.query_params.get('order')
+        if price == 'up':
+            queryset = queryset.order_by('price')
+        elif price == 'down':
+            queryset = queryset.order_by('-price')
+        if priceup:
+            queryset = queryset.filter(price__gte=priceup)
+        if pricedown:
+            queryset = queryset.filter(price__lte=pricedown)
+        if category:
+            queryset = queryset.filter(category__pk=category)
+        if order == 'asc':
+            queryset = queryset.order_by('name')
+        elif order == 'desc':
+            queryset = queryset.order_by('-name')
+        return queryset
+
+
+
+class ProductViewSet(BaseProductViewSet):
     queryset = Product.objects.filter(visible=True, is_sale=False).order_by('sku')
     serializer_class = ProductSerializer
-
-    # pagination_class = StandardResultsSetPagination
 
     def get_queryset(self):
         queryset = super().get_queryset()
@@ -62,7 +86,7 @@ class ProductViewSet(viewsets.ReadOnlyModelViewSet):
         return queryset
 
 
-class ProductSaleViewSet(viewsets.ReadOnlyModelViewSet):
+class ProductSaleViewSet(BaseProductViewSet):
     queryset = Product.objects.filter(visible=True, is_sale=True).order_by('sku')
     serializer_class = ProductSerializer
 
