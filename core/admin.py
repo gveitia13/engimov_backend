@@ -1,6 +1,6 @@
 from django.contrib import admin
 from .models import ProductCategory, WorkCategory, Product, Work, Testimonial, EnterpriseData, \
-    EnterpriseAditionalContact, Contact
+    EnterpriseAditionalContact, Contact, TermsOfUse, PrivacyPolicy
 from solo.admin import SingletonModelAdmin
 
 
@@ -47,6 +47,16 @@ class EnterpriseDataAdmin(SingletonModelAdmin):
 class ContactAdmin(admin.ModelAdmin):
     list_display = ('name', 'email', 'subject')
     search_fields = ('name', 'email', 'subject')
+
+@admin.register(TermsOfUse)
+class TermsOfUseAdmin(admin.ModelAdmin):
+    list_display = ('version', 'effective_date')
+    search_fields = ('version',)
+
+@admin.register(PrivacyPolicy)
+class PrivacyPolicyAdmin(admin.ModelAdmin):
+    list_display = ('version', 'effective_date')
+    search_fields = ('version',)
 
 
 admin.site.register(ProductCategory, ProductCategoryAdmin)

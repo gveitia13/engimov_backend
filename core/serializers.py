@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from .models import ProductCategory, WorkCategory, Product, Work, Testimonial, EnterpriseAditionalContact, \
-    EnterpriseData, Contact
+    EnterpriseData, Contact, TermsOfUse, PrivacyPolicy
 
 
 class ProductCategorySerializer(serializers.ModelSerializer):
@@ -57,3 +57,13 @@ class ContactSerializer(serializers.ModelSerializer):
     class Meta:
         model = Contact
         fields = ('name', 'email', 'subject', 'text')
+
+class TermsOfUseSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = TermsOfUse
+        fields = ('version', 'content', 'effective_date')
+
+class PrivacyPolicySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PrivacyPolicy
+        fields = ('version', 'content', 'effective_date')

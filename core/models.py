@@ -126,3 +126,27 @@ class Contact(models.Model):
     class Meta:
         verbose_name = _('Contact')
         verbose_name_plural = _('Contacts')
+
+class TermsOfUse(SingletonModel):
+    version = models.CharField(max_length=255, verbose_name=_('Version'))
+    content = models.TextField(verbose_name=_('Content'))
+    effective_date = models.DateField(verbose_name=_('Effective Date'))
+
+    def __str__(self):
+        return '{} - {}'.format(self.version, self.effective_date)
+
+    class Meta:
+        verbose_name = _('Terms of Use')
+        verbose_name_plural = _('Terms of Use')
+
+class PrivacyPolicy(SingletonModel):
+    version = models.CharField(max_length=255, verbose_name=_('Version'))
+    content = models.TextField(verbose_name=_('Content'))
+    effective_date = models.DateField(verbose_name=_('Effective Date'))
+
+    def __str__(self):
+        return '{} - {}'.format(self.version, self.effective_date)
+
+    class Meta:
+        verbose_name = _('Privacy Policy')
+        verbose_name_plural = _('Privacy Policies')
