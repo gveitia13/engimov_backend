@@ -26,7 +26,15 @@ class ProductCategoryViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = ProductCategory.objects.filter(
         product__in=Product.objects.filter(visible=True, is_sale=False)).distinct().order_by('-id')
     serializer_class = ProductCategorySerializer
+
     # pagination_class = StandardResultsSetPagination
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        if self.request.query_params.get('index'):
+            queryset = ProductCategory.objects.filter(
+                product__in=Product.objects.filter(visible=True, is_sale=False)[:10]).distinct().order_by('-id')
+        return queryset
 
 
 class ProductInSaleCategoryViewSet(viewsets.ReadOnlyModelViewSet):
@@ -44,7 +52,14 @@ class WorkCategoryViewSet(viewsets.ReadOnlyModelViewSet):
 class ProductViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Product.objects.filter(visible=True, is_sale=False).order_by('sku')
     serializer_class = ProductSerializer
+
     # pagination_class = StandardResultsSetPagination
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        if self.request.query_params.get('index'):
+            queryset = queryset[:10]
+        return queryset
 
 
 class ProductSaleViewSet(viewsets.ReadOnlyModelViewSet):
@@ -136,5 +151,3 @@ class CountView(APIView):
             'product_categories': product_category_count,
             'work_categories': work_category_count,
         })
-
-
