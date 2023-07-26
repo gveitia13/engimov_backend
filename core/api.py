@@ -24,7 +24,7 @@ class SearchResultsSetPagination(pagination.PageNumberPagination):
 
 class ProductCategoryViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = ProductCategory.objects.filter(
-        product__in=Product.objects.filter(visible=True, in_sale=False)).distinct().order_by('-id')
+        product__in=Product.objects.filter(visible=True, is_sale=False)).distinct().order_by('-id')
     serializer_class = ProductCategorySerializer
     # pagination_class = StandardResultsSetPagination
 
