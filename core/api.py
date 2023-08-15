@@ -95,7 +95,7 @@ class ProductSaleViewSet(BaseProductViewSet):
 class WorkViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Work.objects.order_by('-id')
     serializer_class = WorkSerializer
-    # pagination_class = StandardResultsSetPagination
+    pagination_class = StandardResultsSetPagination
 
 
 class TestimonialViewSet(viewsets.ReadOnlyModelViewSet):
