@@ -1,6 +1,6 @@
 from django.contrib import admin
 from .models import ProductCategory, WorkCategory, Product, Work, Testimonial, EnterpriseData, \
-    EnterpriseAditionalContact, Contact, TermsOfUse, PrivacyPolicy
+    EnterpriseAditionalContact, Contact, TermsOfUse, PrivacyPolicy, JobOffer, JobOfferPool, CommercialJobOffer
 from solo.admin import SingletonModelAdmin
 
 
@@ -8,6 +8,9 @@ class TestimonialInline(admin.TabularInline):
     model = Testimonial
     extra = 0
 
+class JobOfferPoolInline(admin.TabularInline):
+    model = JobOfferPool
+    extra = 0
 
 class EnterpriseAditionalContactInLine(admin.TabularInline):
     model = EnterpriseAditionalContact
@@ -58,7 +61,18 @@ class PrivacyPolicyAdmin(admin.ModelAdmin):
     list_display = ('version', 'effective_date')
     search_fields = ('version',)
 
+class JobOfferAdmin(admin.ModelAdmin):
+    list_display = ('name', 'description')
 
+class JobOfferPoolAdmin(admin.ModelAdmin):
+    pass
+
+class CommercialJobOfferAdmin(admin.ModelAdmin):
+    pass
+
+admin.site.register(CommercialJobOffer, CommercialJobOfferAdmin)
+admin.site.register(JobOfferPool, JobOfferPoolAdmin)
+admin.site.register(JobOffer, JobOfferAdmin)
 admin.site.register(ProductCategory, ProductCategoryAdmin)
 admin.site.register(WorkCategory, WorkCategoryAdmin)
 admin.site.register(Product, ProductAdmin)

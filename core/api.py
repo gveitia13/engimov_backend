@@ -1,10 +1,13 @@
 from rest_framework import viewsets, pagination
 from rest_framework.pagination import PageNumberPagination
+from rest_framework.permissions import AllowAny, IsAdminUser
 from rest_framework.views import APIView
 
-from .models import ProductCategory, WorkCategory, Product, Work, Testimonial, EnterpriseData
+from .models import ProductCategory, WorkCategory, Product, Work, Testimonial, EnterpriseData, JobOffer, JobOfferPool, \
+    CommercialJobOffer
 from .serializers import ProductCategorySerializer, WorkCategorySerializer, ProductSerializer, WorkSerializer, \
-    TestimonialSerializer, EnterpriseDataSerializer, ContactSerializer
+    TestimonialSerializer, EnterpriseDataSerializer, ContactSerializer, JobOfferSerializer, JobOfferPoolSerializer, \
+    CommercialJobOfferSerializer
 from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
@@ -72,7 +75,6 @@ class BaseProductViewSet(viewsets.ReadOnlyModelViewSet):
         elif order == 'desc':
             queryset = queryset.order_by('-name')
         return queryset
-
 
 
 class ProductViewSet(BaseProductViewSet):
@@ -175,3 +177,54 @@ class CountView(APIView):
             'product_categories': product_category_count,
             'work_categories': work_category_count,
         })
+
+
+class JobOfferViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = JobOffer.objects.all()
+    serializer_class = JobOfferSerializer
+
+    def list(self, request, *args, **kwargs):
+        response = super().list(request, *args, **kwargs)
+        if request.query_params.get('long') == 'True':
+            for job_offer_data in response.data:
+                job_offer = JobOffer.objects.get(pk=job_offer_data['pk'])
+                job_offer_pools = job_offer.jobofferpool_set.all()
+                job_offer_pools_data = JobOfferPoolSerializer(job_offer_pools, many=True).data
+                job_offer_data['job_offer_pools'] = job_offer_pools_data
+        return response
+
+
+class JobOfferPoolViewSet(viewsets.ModelViewSet):
+    queryset = JobOfferPool.objects.all()
+    serializer_class = JobOfferPoolSerializer
+
+    def get_permissions(self):
+        if self.action == 'create':
+            permission_classes = [AllowAny]
+        else:
+            permission_classes = [IsAdminUser]
+        return [permission() for permission in permission_classes]
+
+    def get_queryset(self):
+        if self.action == 'create':
+            return super().get_queryset()
+        else:
+            return JobOfferPool.objects.none()
+
+
+class CommercialJobOfferViewSet(viewsets.ModelViewSet):
+    queryset = CommercialJobOffer.objects.all()
+    serializer_class = CommercialJobOfferSerializer
+
+    def get_permissions(self):
+        if self.action == 'create':
+            permission_classes = [AllowAny]
+        else:
+            permission_classes = [IsAdminUser]
+        return [permission() for permission in permission_classes]
+
+    def get_queryset(self):
+        if self.action == 'create':
+            return super().get_queryset()
+        else:
+            return CommercialJobOffer.objects.none()

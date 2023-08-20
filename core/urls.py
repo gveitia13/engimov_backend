@@ -2,7 +2,8 @@ from django.urls import path, include
 from rest_framework import routers
 from .api import ProductCategoryViewSet, WorkCategoryViewSet, ProductViewSet, WorkViewSet, TestimonialViewSet, \
     EnterpriseDataViewSet, create_contact, SearchPreviewView, SearchView, CountView, ProductInSaleCategoryViewSet, \
-    ProductSaleViewSet
+    ProductSaleViewSet, JobOfferViewSet, JobOfferPoolViewSet, CommercialJobOfferViewSet
+from .models import CommercialJobOffer, JobOfferPool
 
 router = routers.DefaultRouter()
 router.register('productcategories', ProductCategoryViewSet)
@@ -13,6 +14,9 @@ router.register('productcategories_sale', ProductInSaleCategoryViewSet)
 router.register('works', WorkViewSet)
 router.register('testimonials', TestimonialViewSet)
 router.register('enterprise_data', EnterpriseDataViewSet)
+router.register('job_offers', JobOfferViewSet)
+router.register('job_offers_pool', JobOfferPoolViewSet)
+router.register('commercial_job_offers', CommercialJobOfferViewSet)
 
 urlpatterns = [
     path('core/', include(router.urls)),

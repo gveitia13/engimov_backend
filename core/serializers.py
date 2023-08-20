@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from .models import ProductCategory, WorkCategory, Product, Work, Testimonial, EnterpriseAditionalContact, \
-    EnterpriseData, Contact, TermsOfUse, PrivacyPolicy
+    EnterpriseData, Contact, TermsOfUse, PrivacyPolicy, JobOffer, JobOfferPool, CommercialJobOffer
 
 
 class ProductCategorySerializer(serializers.ModelSerializer):
@@ -67,3 +67,19 @@ class PrivacyPolicySerializer(serializers.ModelSerializer):
     class Meta:
         model = PrivacyPolicy
         fields = ('version', 'content', 'effective_date')
+
+class JobOfferSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = JobOffer
+        fields = ('pk','name', 'description')
+
+class JobOfferPoolSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = JobOfferPool
+        fields = '__all__'
+
+class CommercialJobOfferSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CommercialJobOffer
+        fields = '__all__'
+
