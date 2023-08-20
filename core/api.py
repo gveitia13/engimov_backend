@@ -91,12 +91,13 @@ class ProductViewSet(BaseProductViewSet):
 class ProductSaleViewSet(BaseProductViewSet):
     queryset = Product.objects.filter(visible=True, is_sale=True).order_by('sku')
     serializer_class = ProductSerializer
+    pagination_class = StandardResultsSetPagination
 
 
 class WorkViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Work.objects.order_by('-id')
     serializer_class = WorkSerializer
-    # pagination_class = StandardResultsSetPagination
+    pagination_class = StandardResultsSetPagination
 
 
 class TestimonialViewSet(viewsets.ReadOnlyModelViewSet):
