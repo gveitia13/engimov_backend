@@ -57,6 +57,7 @@ class Work(models.Model):
         verbose_name = _('Work')
         verbose_name_plural = _('Works')
 
+
 class JobOffer(models.Model):
     name = models.CharField(max_length=255, verbose_name=_('Name'))
     description = RichTextField(max_length=400, verbose_name=_('Description'))
@@ -68,16 +69,17 @@ class JobOffer(models.Model):
         verbose_name = _('Job Offer')
         verbose_name_plural = _('Job Offers')
 
+
 class JobOfferPool(models.Model):
     job_offer = models.ForeignKey(JobOffer, on_delete=models.CASCADE)
     name = models.CharField(max_length=255, verbose_name=_('Name'))
     email = models.EmailField(verbose_name=_('Email'))
-    tel = models.CharField(max_length=255, verbose_name=_('Phone Number'))
-    formation = models.TextField(verbose_name=_('Formation'))
-    cv = models.FileField(upload_to='cv/', storage=None,verbose_name=_('CV'))
-    experience = models.TextField(verbose_name=_('Experience'))
-    skills = models.TextField(verbose_name=_('Skills'))
-    others = models.TextField(verbose_name=_('Other Data'))
+    tel = models.CharField(max_length=255, verbose_name=_('Phone Number'), null=True, blank=True)
+    formation = models.TextField(verbose_name=_('Formation'), null=True, blank=True)
+    cv = models.FileField(upload_to='cv/', storage=None, verbose_name=_('CV'))
+    experience = models.TextField(verbose_name=_('Experience'), null=True, blank=True)
+    skills = models.TextField(verbose_name=_('Skills'), null=True, blank=True)
+    others = models.TextField(verbose_name=_('Other Data'), null=True, blank=True)
 
     def __str__(self):
         return '{}'.format(self.name)
@@ -86,13 +88,15 @@ class JobOfferPool(models.Model):
         verbose_name = _('Job Offer Pool')
         verbose_name_plural = _('Job Offers Pools')
 
+
 class CommercialJobOffer(models.Model):
+    job_offer = models.ForeignKey(JobOffer, on_delete=models.CASCADE)
     name = models.CharField(max_length=255, verbose_name=_('Name'))
     email = models.EmailField(verbose_name=_('Email'))
-    tel = models.CharField(max_length=255, verbose_name=_('Phone Number'))
-    sector = models.CharField(max_length=255, verbose_name=_('Sector'))
+    tel = models.CharField(max_length=255, verbose_name=_('Phone Number'), null=True, blank=True)
+    sector = models.CharField(max_length=255, verbose_name=_('Sector'), null=True, blank=True)
     business_offer = models.TextField(verbose_name=_('Business Offer'))
-    others = models.TextField(verbose_name=_('Other Data'))
+    others = models.TextField(verbose_name=_('Other Data'), null=True, blank=True)
 
     def __str__(self):
         return '{}'.format(self.name)
@@ -100,6 +104,7 @@ class CommercialJobOffer(models.Model):
     class Meta:
         verbose_name = _('Commercial Job Offer')
         verbose_name_plural = _('Commercial Job Offers')
+
 
 class Testimonial(models.Model):
     work = models.ForeignKey(Work, on_delete=models.CASCADE, verbose_name=_('Work'))
@@ -171,6 +176,7 @@ class Contact(models.Model):
         verbose_name = _('Contact')
         verbose_name_plural = _('Contacts')
 
+
 class TermsOfUse(SingletonModel):
     version = models.CharField(max_length=255, verbose_name=_('Version'))
     content = models.TextField(verbose_name=_('Content'))
@@ -182,6 +188,7 @@ class TermsOfUse(SingletonModel):
     class Meta:
         verbose_name = _('Terms of Use')
         verbose_name_plural = _('Terms of Use')
+
 
 class PrivacyPolicy(SingletonModel):
     version = models.CharField(max_length=255, verbose_name=_('Version'))
