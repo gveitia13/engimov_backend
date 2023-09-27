@@ -1,0 +1,20 @@
+#jazzy-logo img {
+    opacity: 1 !important;
+    max-height: 40px;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+    margin-left: .6rem !important;
+}
+
+#jazzy-logo {
+    padding-top: .6rem;
+    padding-bottom: .6rem;
+}
+
+#jazzy-logo span {
+    font-weight: 500 !important;
+}
+
+.login-logo img {
+    height: 90px;
+}

@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils.safestring import mark_safe
 from django.utils.translation import gettext_lazy as _
 from solo.models import SingletonModel
 from ckeditor.fields import RichTextField
@@ -48,7 +49,8 @@ class Work(models.Model):
     category = models.ForeignKey(WorkCategory, on_delete=models.CASCADE, verbose_name=_('Category'))
     name = models.CharField(max_length=255, verbose_name=_('Name'))
     description = models.TextField(verbose_name=_('Description'))
-    image = models.ImageField(upload_to='works/', verbose_name=_('Images'))
+    image = models.ImageField(upload_to='works/', verbose_name=_('Images'),
+                              help_text='Poner imagen horizontal, relación aspecto 16:9 preferiblemente')
 
     def __str__(self):
         return '{}'.format(self.name)
@@ -56,6 +58,11 @@ class Work(models.Model):
     class Meta:
         verbose_name = _('Work')
         verbose_name_plural = _('Works')
+
+    def get_image(self):
+        return mark_safe(f'<img src="{self.image.url}" class="img-fluid" width=65/>')
+
+    get_image.short_description = 'Imagen'
 
 
 class JobOffer(models.Model):
@@ -135,6 +142,8 @@ class EnterpriseData(SingletonModel):
                                help_text=_('Optional'))
     instagram = models.CharField(max_length=500, verbose_name=_('Enterprise Instagram Page'), null=True, blank=True,
                                  help_text=_('Optional'))
+    doc_folleto_digital = models.FileField(_('Folleto digital'), null=True, blank=True, upload_to='doc/')
+    doc_presentation = models.FileField(_('Carta de presentación'), null=True, blank=True, upload_to='doc/')
 
     def __str__(self):
         return "{}".format(self.enterprise_name)

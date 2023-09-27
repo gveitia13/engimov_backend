@@ -16,7 +16,6 @@ from pathlib import Path
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
@@ -34,6 +33,7 @@ CORS_ORIGIN_ALLOW_ALL = True
 # Application definition
 
 INSTALLED_APPS = [
+    'jazzmin',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -42,8 +42,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'core.apps.CoreConfig',
     'sections.apps.SectionsConfig',
-    #third party apps
+    # third party apps
     'django_q',
+    'django_cleanup',
     'rest_framework',
     'drf_yasg',
     'corsheaders',
@@ -51,6 +52,29 @@ INSTALLED_APPS = [
     'ckeditor_uploader',
     'solo.apps.SoloAppConfig',
 ]
+
+BUSINESS_LOGO_PATH = 'admin/img/engi_logo.png'
+BUSINESS_NAME = 'Admin'
+BUSINESS_NAME_IMG_PATH = 'admin/img/engi_logo_2.png'
+BUSINESS_BANNER = 'admin/img/banner_lg.png'
+BUSINESS_ICON_PATH = 'admin/img/icon_yellow.png'
+
+JAZZMIN_SETTINGS = {
+    "site_brand": BUSINESS_NAME,
+    "site_title": "Engimov Admin",
+    "welcome_sign": '',
+    'site_icon': 'vendor/adminlte/img/AdminLTELogo.png',
+    'site_logo': BUSINESS_LOGO_PATH,
+    'site_logo_classes': 'brand-image',
+    "login_logo": BUSINESS_NAME_IMG_PATH,
+    "login_logo_dark": BUSINESS_LOGO_PATH,
+    'site_header': BUSINESS_NAME,
+    "custom_css": 'admin/css/admin.css',
+    'copyright': '',
+    "order_with_respect_to": ["core", 'sections', 'core.enterprisedata', 'core.ProductCategory', 'core.product',
+                              'core.WorkCategory', 'core.work', 'core.JobOffer', 'core.JobOfferPool',
+                              'core.CommercialJobOffer'],
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -84,7 +108,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'engimovCaribe.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
@@ -109,7 +132,6 @@ DATABASES = {
     }
 }
 
-
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
 
@@ -127,7 +149,6 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
-
 
 CACHES = {
     'default': {
@@ -152,7 +173,6 @@ TIME_ZONE = 'America/Havana'
 USE_I18N = True
 
 USE_TZ = True
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
@@ -184,16 +204,15 @@ Q_CLUSTER = {
     'name': 'DjangORM',
     'workers': 4,
     'timeout': 43200,
-    'retry': (43200*2),
+    'retry': (43200 * 2),
     'queue_limit': 50,
     'bulk': 10,
     'orm': 'default'
 }
 
-
-#DJANGO SOLO
+# DJANGO SOLO
 SOLO_ADMIN_SKIP_OBJECT_LIST_PAGE = True
-SOLO_CACHE_TIMEOUT = 60*5  # 5 mins
+SOLO_CACHE_TIMEOUT = 60 * 5  # 5 mins
 SOLO_CACHE = 'local'
 SOLO_CACHE_PREFIX = 'solo'
 DATA_UPLOAD_MAX_NUMBER_FIELDS = 10240
