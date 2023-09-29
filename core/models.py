@@ -83,7 +83,7 @@ class JobOfferPool(models.Model):
     email = models.EmailField(verbose_name=_('Email'))
     tel = models.CharField(max_length=255, verbose_name=_('Phone Number'), null=True, blank=True)
     formation = models.TextField(verbose_name=_('Formation'), null=True, blank=True)
-    cv = models.FileField(upload_to='cv/', storage=None, verbose_name=_('CV'))
+    cv = models.FileField(upload_to='cv/', verbose_name=_('CV'))
     experience = models.TextField(verbose_name=_('Experience'), null=True, blank=True)
     skills = models.TextField(verbose_name=_('Skills'), null=True, blank=True)
     others = models.TextField(verbose_name=_('Other Data'), null=True, blank=True)

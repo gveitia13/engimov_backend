@@ -74,7 +74,8 @@ class PrivacyPolicySerializer(serializers.ModelSerializer):
 class JobOfferSerializer(serializers.ModelSerializer):
     class Meta:
         model = JobOffer
-        fields = ('pk', 'name', 'description')
+        # fields = ('pk', 'name', 'description')
+        fields = '__all__'
 
 
 class JobOfferPoolSerializer(serializers.ModelSerializer):

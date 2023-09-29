@@ -163,9 +163,9 @@ CACHES = {
 # Internationalization
 # https://docs.djangoproject.com/en/4.1/topics/i18n/
 
-LANGUAGE_CODE = 'pt-br'
-LANGUAGES = [('pt-br', 'Português'), ('es', 'Español')]
-
+# LANGUAGE_CODE = 'pt-br'
+# LANGUAGES = [('pt-br', 'Português'), ('es', 'Español')]
+LANGUAGE_CODE = 'es'
 LOCALE_PATHS = (str(BASE_DIR / 'locale'),)
 
 TIME_ZONE = 'America/Havana'
