@@ -68,6 +68,12 @@ class Work(models.Model):
 class JobOffer(models.Model):
     name = models.CharField(max_length=255, verbose_name=_('Name'))
     description = RichTextField(max_length=400, verbose_name=_('Description'))
+    is_active = models.BooleanField(_('Is active'), default=True)
+
+    def get_description(self):
+        return mark_safe(self.description)
+
+    get_description.short_description = _('Description')
 
     def __str__(self):
         return '{}'.format(self.name)
@@ -75,6 +81,7 @@ class JobOffer(models.Model):
     class Meta:
         verbose_name = _('Job Offer')
         verbose_name_plural = _('Job Offers')
+        ordering = ('is_active', '-pk')
 
 
 class JobOfferPool(models.Model):
@@ -87,6 +94,7 @@ class JobOfferPool(models.Model):
     experience = models.TextField(verbose_name=_('Experience'), null=True, blank=True)
     skills = models.TextField(verbose_name=_('Skills'), null=True, blank=True)
     others = models.TextField(verbose_name=_('Other Data'), null=True, blank=True)
+    is_checked = models.BooleanField(_('Is checked'), default=False)
 
     def __str__(self):
         return '{}'.format(self.name)
@@ -94,6 +102,7 @@ class JobOfferPool(models.Model):
     class Meta:
         verbose_name = _('Job Offer Pool')
         verbose_name_plural = _('Job Offers Pools')
+        ordering = ('is_checked', 'job_offer', 'pk')
 
 
 class CommercialJobOffer(models.Model):
@@ -104,6 +113,7 @@ class CommercialJobOffer(models.Model):
     sector = models.CharField(max_length=255, verbose_name=_('Sector'), null=True, blank=True)
     business_offer = models.TextField(verbose_name=_('Business Offer'))
     others = models.TextField(verbose_name=_('Other Data'), null=True, blank=True)
+    is_checked = models.BooleanField(_('Is checked'), default=False)
 
     def __str__(self):
         return '{}'.format(self.name)
@@ -111,6 +121,7 @@ class CommercialJobOffer(models.Model):
     class Meta:
         verbose_name = _('Commercial Job Offer')
         verbose_name_plural = _('Commercial Job Offers')
+        ordering = ('is_checked', 'job_offer', '-pk')
 
 
 class Testimonial(models.Model):

@@ -217,15 +217,15 @@ class CommercialJobOfferViewSet(viewsets.ModelViewSet):
     queryset = CommercialJobOffer.objects.all()
     serializer_class = CommercialJobOfferSerializer
 
-    def get_permissions(self):
-        if self.action == 'create':
-            permission_classes = [AllowAny]
-        else:
-            permission_classes = [IsAdminUser]
-        return [permission() for permission in permission_classes]
-
-    def get_queryset(self):
-        if self.action == 'create':
-            return super().get_queryset()
-        else:
-            return CommercialJobOffer.objects.none()
+    # def get_permissions(self):
+    #     if self.action == 'create':
+    #         permission_classes = [AllowAny]
+    #     else:
+    #         permission_classes = [IsAdminUser]
+    #     return [permission() for permission in permission_classes]
+    #
+    # def get_queryset(self):
+    #     if self.action == 'create':
+    #         return super().get_queryset()
+    #     else:
+    #         return CommercialJobOffer.objects.none()

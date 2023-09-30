@@ -76,6 +76,34 @@ JAZZMIN_SETTINGS = {
                               'core.CommercialJobOffer'],
 }
 
+CKEDITOR_CONFIGS = {
+    'default': {
+        "skin": "moono-lisa",
+        "toolbar_Basic": [["Source", "-", "Bold", "Italic"]],
+        "toolbar_Full": [
+            [
+                "Styles",
+                "Format",
+                "Bold",
+                "Italic",
+                "Underline",
+                "Strike",
+                "SpellChecker",
+                "Undo",
+                "Redo",
+            ],
+            ["Link", "Unlink", "Anchor"],
+            ["Image", "Flash", "Table", "HorizontalRule"],
+            ["TextColor", "BGColor"],
+            ["Smiley", "SpecialChar"],
+        ],
+        "toolbar": "Full",
+        "height": 300,
+        "width": 'auto',
+        "filebrowserWindowWidth": 940,
+        "filebrowserWindowHeight": 725,
+    }
+}
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',

@@ -73,15 +73,18 @@ class PrivacyPolicyAdmin(admin.ModelAdmin):
 
 
 class JobOfferAdmin(admin.ModelAdmin):
-    list_display = ('name', 'description')
+    list_display = ('name', 'get_description', 'is_active')
+    list_editable = ('is_active',)
 
 
 class JobOfferPoolAdmin(admin.ModelAdmin):
-    pass
+    list_display = ('job_offer', 'name', 'email', 'cv', 'is_checked')
+    list_editable = ('is_checked',)
 
 
 class CommercialJobOfferAdmin(admin.ModelAdmin):
-    pass
+    list_display = ('job_offer', 'name', 'email', 'is_checked')
+    list_editable = ('is_checked',)
 
 
 admin.site.register(CommercialJobOffer, CommercialJobOfferAdmin)

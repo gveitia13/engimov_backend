@@ -18,3 +18,8 @@
 .login-logo img {
     height: 90px;
 }
+
+
+div[id*=cke_id] {
+    width: auto !important;
+}
