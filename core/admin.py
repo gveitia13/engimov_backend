@@ -56,8 +56,10 @@ class EnterpriseDataAdmin(SingletonModelAdmin):
 
 @admin.register(Contact)
 class ContactAdmin(admin.ModelAdmin):
-    list_display = ('name', 'email', 'subject')
+    list_display = ('name', 'email', 'subject', 'is_checked')
     search_fields = ('name', 'email', 'subject')
+    list_editable = ('is_checked',)
+    ordering = ('is_checked',)
 
 
 @admin.register(TermsOfUse)

@@ -142,7 +142,7 @@ class EnterpriseData(SingletonModel):
     enterprise_name = models.CharField(max_length=255, verbose_name=_('Enterprise Name'))
     location = models.TextField(verbose_name=_('Enterprise Google Maps Location'))
     email = models.EmailField(verbose_name=_('Enterprise Main Email'))
-    tel = models.CharField(max_length=255, verbose_name=_('Enterprise Main Phone Number'))
+    tel = models.CharField(max_length=255, verbose_name=_('Enterprise Main Phone Number'), null=True, blank=True)
     address = models.TextField(verbose_name=_('Enterprise Address'))
     city = models.CharField(_('City'), max_length=250, null=True, blank=True, help_text=_('Optional'))
     facebook = models.CharField(max_length=500, verbose_name=_('Enterprise Facebook Page'), null=True, blank=True,
@@ -188,6 +188,7 @@ class Contact(models.Model):
     email = models.EmailField(verbose_name=_('Email'))
     subject = models.CharField(max_length=255, verbose_name=_('Subject'))
     text = models.TextField(verbose_name=_('Text'))
+    is_checked = models.BooleanField(_('Is checked'), default=False)
 
     def __str__(self):
         return '{}'.format(self.name)

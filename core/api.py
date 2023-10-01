@@ -181,7 +181,7 @@ class CountView(APIView):
 
 
 class JobOfferViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = JobOffer.objects.all()
+    queryset = JobOffer.objects.filter(is_active=True)
     serializer_class = JobOfferSerializer
 
     # def list(self, request, *args, **kwargs):
