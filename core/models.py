@@ -200,11 +200,11 @@ class Contact(models.Model):
 
 class TermsOfUse(SingletonModel):
     version = models.CharField(max_length=255, verbose_name=_('Versión'))
-    content = models.TextField(verbose_name=_('Contenido'))
+    content = RichTextField(verbose_name=_('Contenido'))
     effective_date = models.DateField(verbose_name=_('Fecha de Efectividad'))
 
     def __str__(self):
-        return '{} - {}'.format(self.version, self.effective_date)
+        return '{} - {}'.format('Términos y Condiciones', self.effective_date)
 
     class Meta:
         verbose_name = _('Término de Uso')
@@ -213,11 +213,11 @@ class TermsOfUse(SingletonModel):
 
 class PrivacyPolicy(SingletonModel):
     version = models.CharField(max_length=255, verbose_name=_('Version'))
-    content = models.TextField(verbose_name=_('Contenido'))
+    content = RichTextField(verbose_name=_('Contenido'))
     effective_date = models.DateField(verbose_name=_('Fecha de Efectividad'))
 
     def __str__(self):
-        return '{} - {}'.format(self.version, self.effective_date)
+        return '{} - {}'.format('Política de Privacidad', self.effective_date)
 
     class Meta:
         verbose_name = _('Política de privacidad')

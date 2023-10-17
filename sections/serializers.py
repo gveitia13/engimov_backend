@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from .models import IndexSection, AboutUsSection, ProductsPortfolioSection, WorksPortfolioSection, WorkWithUsSection, \
-    ContactUsSection, SellProductsSection
+    ContactUsSection, SellProductsSection, TermsAndPrivacyPolice
 
 
 class IndexSectionSerializer(serializers.ModelSerializer):
@@ -43,4 +43,10 @@ class ContactUsSectionSerializer(serializers.ModelSerializer):
 class SellProductsSectionSerializer(serializers.ModelSerializer):
     class Meta:
         model = SellProductsSection
+        fields = ('title', 'subtitle', 'image')
+
+
+class TermsAndPrivacyPoliceSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = TermsAndPrivacyPolice
         fields = ('title', 'subtitle', 'image')

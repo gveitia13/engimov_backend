@@ -4,10 +4,10 @@ from rest_framework.permissions import AllowAny, IsAdminUser
 from rest_framework.views import APIView
 
 from .models import ProductCategory, WorkCategory, Product, Work, Testimonial, EnterpriseData, JobOffer, JobOfferPool, \
-    CommercialJobOffer
+    CommercialJobOffer, TermsOfUse, PrivacyPolicy
 from .serializers import ProductCategorySerializer, WorkCategorySerializer, ProductSerializer, WorkSerializer, \
     TestimonialSerializer, EnterpriseDataSerializer, ContactSerializer, JobOfferSerializer, JobOfferPoolSerializer, \
-    CommercialJobOfferSerializer
+    CommercialJobOfferSerializer, TermsOfUseSerializer, PrivacyPolicySerializer
 from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
@@ -229,3 +229,13 @@ class CommercialJobOfferViewSet(viewsets.ModelViewSet):
     #         return super().get_queryset()
     #     else:
     #         return CommercialJobOffer.objects.none()
+
+
+class TermsOfUseViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = TermsOfUse.objects.all()
+    serializer_class = TermsOfUseSerializer
+
+
+class PrivacyPolicyViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = PrivacyPolicy.objects.all()
+    serializer_class = PrivacyPolicySerializer

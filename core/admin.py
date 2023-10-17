@@ -62,16 +62,16 @@ class ContactAdmin(admin.ModelAdmin):
     ordering = ('is_checked',)
 
 
-@admin.register(TermsOfUse)
-class TermsOfUseAdmin(admin.ModelAdmin):
-    list_display = ('version', 'effective_date')
-    search_fields = ('version',)
-
-
-@admin.register(PrivacyPolicy)
-class PrivacyPolicyAdmin(admin.ModelAdmin):
-    list_display = ('version', 'effective_date')
-    search_fields = ('version',)
+# @admin.register(TermsOfUse)
+# class TermsOfUseAdmin(admin.ModelAdmin):
+#     list_display = ('version', 'effective_date')
+#     search_fields = ('version',)
+#
+#
+# @admin.register(PrivacyPolicy)
+# class PrivacyPolicyAdmin(admin.ModelAdmin):
+#     list_display = ('version', 'effective_date')
+#     search_fields = ('version',)
 
 
 class JobOfferAdmin(admin.ModelAdmin):
@@ -89,6 +89,8 @@ class CommercialJobOfferAdmin(admin.ModelAdmin):
     list_editable = ('is_checked',)
 
 
+admin.site.register(TermsOfUse, SingletonModelAdmin)
+admin.site.register(PrivacyPolicy, SingletonModelAdmin)
 admin.site.register(CommercialJobOffer, CommercialJobOfferAdmin)
 admin.site.register(JobOfferPool, JobOfferPoolAdmin)
 admin.site.register(JobOffer, JobOfferAdmin)

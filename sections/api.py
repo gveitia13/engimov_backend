@@ -4,10 +4,10 @@ from rest_framework import viewsets
 
 from core.models import TermsOfUse, PrivacyPolicy
 from .models import IndexSection, AboutUsSection, ProductsPortfolioSection, WorksPortfolioSection, WorkWithUsSection, \
-    ContactUsSection, SellProductsSection
+    ContactUsSection, SellProductsSection, TermsAndPrivacyPolice
 from .serializers import IndexSectionSerializer, AboutUsSectionSerializer, ProductsPortfolioSectionSerializer, \
     WorksPortfolioSectionSerializer, WorkWithUsSectionSerializer, ContactUsSectionSerializer, \
-    SellProductsSectionSerializer
+    SellProductsSectionSerializer, TermsAndPrivacyPoliceSerializer
 
 
 class IndexSectionViewSet(viewsets.ReadOnlyModelViewSet):
@@ -74,3 +74,8 @@ class ContactUsSectionViewSet(viewsets.ReadOnlyModelViewSet):
 class SellProductsSectionViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = SellProductsSection.objects.order_by('-id')
     serializer_class = SellProductsSectionSerializer
+
+
+class TermsAndPrivacyPoliceViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = TermsAndPrivacyPolice.objects.order_by('-id')
+    serializer_class = TermsAndPrivacyPoliceSerializer

@@ -71,3 +71,9 @@ class SellProductsSection(SectionBaseModel):
     class Meta:
         verbose_name = _('Producto de venta')
         verbose_name_plural = _('Productos en venta')
+
+
+class TermsAndPrivacyPolice(SectionBaseModel):
+    class Meta:
+        verbose_name = 'Términos de Uso y Política de Privacidad'
+        verbose_name_plural = verbose_name
