@@ -1,10 +1,9 @@
-from django.contrib import admin
-
 # Register your models here.
 from django.contrib import admin
+from solo.admin import SingletonModelAdmin
+
 from .models import IndexSection, AboutUsSection, ProductsPortfolioSection, WorksPortfolioSection, WorkWithUsSection, \
     ContactUsSection, SellProductsSection, AboutUsSectionPerks, TermsAndPrivacyPolice
-from solo.admin import SingletonModelAdmin
 
 
 class AboutUsSectionPerksInline(admin.StackedInline):
@@ -12,47 +11,20 @@ class AboutUsSectionPerksInline(admin.StackedInline):
     extra = 0
 
 
-class IndexSectionAdmin(SingletonModelAdmin):
+class BaseSectionAdmin(SingletonModelAdmin):
     list_display = ('title', 'subtitle')
     search_fields = ('title', 'subtitle')
 
 
-class AboutUsSectionAdmin(SingletonModelAdmin):
-    list_display = ('title', 'subtitle')
-    search_fields = ('title', 'subtitle')
+class AboutUsSectionAdmin(BaseSectionAdmin):
     inlines = [AboutUsSectionPerksInline, ]
 
 
-class ProductsPortfolioAdmin(SingletonModelAdmin):
-    list_display = ('title', 'subtitle')
-    search_fields = ('title', 'subtitle')
-
-
-class WorksPortfolioAdmin(SingletonModelAdmin):
-    list_display = ('title', 'subtitle')
-    search_fields = ('title', 'subtitle')
-
-
-class WorkWithUsAdmin(SingletonModelAdmin):
-    list_display = ('title', 'subtitle')
-    search_fields = ('title', 'subtitle')
-
-
-class ContactUsAdmin(SingletonModelAdmin):
-    list_display = ('title', 'subtitle')
-    search_fields = ('title', 'subtitle')
-
-
-class SellProductsAdmin(SingletonModelAdmin):
-    list_display = ('title', 'subtitle')
-    search_fields = ('title', 'subtitle')
-
-
-admin.site.register(IndexSection, IndexSectionAdmin)
+admin.site.register(IndexSection, BaseSectionAdmin)
 admin.site.register(AboutUsSection, AboutUsSectionAdmin)
-admin.site.register(ProductsPortfolioSection, ProductsPortfolioAdmin)
-admin.site.register(WorksPortfolioSection, WorksPortfolioAdmin)
-admin.site.register(WorkWithUsSection, WorkWithUsAdmin)
-admin.site.register(ContactUsSection, ContactUsAdmin)
-admin.site.register(SellProductsSection, SellProductsAdmin)
-admin.site.register(TermsAndPrivacyPolice, SellProductsAdmin)
+admin.site.register(ProductsPortfolioSection, BaseSectionAdmin)
+admin.site.register(WorksPortfolioSection, BaseSectionAdmin)
+admin.site.register(WorkWithUsSection, BaseSectionAdmin)
+admin.site.register(ContactUsSection, BaseSectionAdmin)
+admin.site.register(SellProductsSection, BaseSectionAdmin)
+admin.site.register(TermsAndPrivacyPolice, BaseSectionAdmin)

@@ -1,10 +1,10 @@
 from django.urls import path, include
 from rest_framework import routers
+
 from .api import ProductCategoryViewSet, WorkCategoryViewSet, ProductViewSet, WorkViewSet, TestimonialViewSet, \
     EnterpriseDataViewSet, create_contact, SearchPreviewView, SearchView, CountView, ProductInSaleCategoryViewSet, \
     ProductSaleViewSet, JobOfferViewSet, JobOfferPoolViewSet, CommercialJobOfferViewSet, TermsOfUseViewSet, \
     PrivacyPolicyViewSet
-from .models import CommercialJobOffer, JobOfferPool
 
 router = routers.DefaultRouter()
 router.register('productcategories', ProductCategoryViewSet)
