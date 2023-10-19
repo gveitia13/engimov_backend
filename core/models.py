@@ -36,6 +36,8 @@ class Product(models.Model):
     price = models.FloatField(verbose_name=_('Precio'))
     visible = models.BooleanField(verbose_name=_('Visibilidad'))
     is_sale = models.BooleanField(_('En venta'), default=False)
+    stock = models.IntegerField(verbose_name='Cantidad de inventario', default=1)
+    date_updated = models.DateTimeField(auto_now=True, null=True, blank=True)
 
     def __str__(self):
         return '{}'.format(self.name)
@@ -145,13 +147,15 @@ class EnterpriseData(SingletonModel):
     tel = models.CharField(max_length=255, verbose_name=_('Teléfono principal de la empresa'), null=True, blank=True)
     address = models.TextField(verbose_name=_('Dirección de la empresa'))
     city = models.CharField(_('Ciudad'), max_length=250, null=True, blank=True, help_text=_('Opcional'))
-    facebook = models.CharField(max_length=500, verbose_name=_('Página de Facebook de la empresa'), null=True, blank=True,
+    facebook = models.CharField(max_length=500, verbose_name=_('Página de Facebook de la empresa'), null=True,
+                                blank=True,
                                 help_text=_('Optional'))
     twitter = models.CharField(max_length=500, verbose_name=_('Página de Twitter de la empresa'), null=True, blank=True,
                                help_text=_('Optional'))
     youtube = models.CharField(max_length=500, verbose_name=_('Página de Youtube de la empresa'), null=True, blank=True,
                                help_text=_('Optional'))
-    instagram = models.CharField(max_length=500, verbose_name=_('Página de instagram de la empresa'), null=True, blank=True,
+    instagram = models.CharField(max_length=500, verbose_name=_('Página de instagram de la empresa'), null=True,
+                                 blank=True,
                                  help_text=_('Opcional'))
     doc_folleto_digital = models.FileField(_('Folleto digital'), null=True, blank=True, upload_to='doc/')
     doc_presentation = models.FileField(_('Carta de presentación'), null=True, blank=True, upload_to='doc/')
@@ -170,7 +174,8 @@ class EnterpriseAditionalContact(models.Model):
         ('tel', _('Teléfono')),
     )
     enterprise = models.ForeignKey(EnterpriseData, on_delete=models.CASCADE)
-    contact_type = models.CharField(max_length=255, verbose_name=_('Tipo de contacto'), choices=ENTERPRISE_CONTACT_CHOICES)
+    contact_type = models.CharField(max_length=255, verbose_name=_('Tipo de contacto'),
+                                    choices=ENTERPRISE_CONTACT_CHOICES)
     contact = models.CharField(max_length=255, verbose_name=_('Contacto'))
     contact_aditional_info = models.CharField(max_length=255, verbose_name=_('Info adicional'), null=True,
                                               blank=True, help_text=_('Opcional'))

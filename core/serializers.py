@@ -18,7 +18,7 @@ class WorkCategorySerializer(serializers.ModelSerializer):
 class ProductSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product
-        fields = ('sku', 'category', 'name', 'description', 'image', 'price', 'visible')
+        fields = ('sku', 'category', 'name', 'description', 'image', 'price', 'visible', 'stock')
         depth = 1
 
 

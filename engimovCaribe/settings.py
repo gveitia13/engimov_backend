@@ -27,6 +27,8 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 CORS_ORIGIN_ALLOW_ALL = True
+CORS_ALLOW_CREDENTIALS = True
+CORS_ALLOW_HEADERS = ['currency', 'X-Session-ID', 'content-type']
 # CORS_ALLOW_CREDENTIALS = True
 # CSRF_TRUSTED_ORIGINS = ['https://*.127.0.0.1', 'https://*.render.com', 'https://*.onrender.com']
 
@@ -42,6 +44,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'core.apps.CoreConfig',
     'sections.apps.SectionsConfig',
+    'app_cart',
     # third party apps
     'django_q',
     'django_cleanup',
@@ -274,3 +277,6 @@ CKEDITOR_CONFIGS = {
         "filebrowserWindowHeight": 725,
     }
 }
+
+CART_SESSION_ID = "cart"
+SESSION_COOKIE_AGE = 7200
