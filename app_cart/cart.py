@@ -21,11 +21,11 @@ class Cart(object):
         q = int(quantity)
         stock = int(product.stock)
         shopping_cart = cache.get(self.session) or {}
-        if str(product.id) not in shopping_cart:
-            shopping_cart[str(product.id)] = q if q <= stock else stock
+        if str(product.pk) not in shopping_cart:
+            shopping_cart[str(product.pk)] = q if q <= stock else stock
         else:
-            amount = int(cache.get(self.session)[str(product.id)])
-            shopping_cart[str(product.id)] = amount + q if (amount + q) <= stock else stock
+            amount = int(cache.get(self.session)[str(product.pk)])
+            shopping_cart[str(product.pk)] = amount + q if (amount + q) <= stock else stock
         self.save(shopping_cart)
 
     def subtract(self, product, quantity=1):
@@ -34,13 +34,13 @@ class Cart(object):
         """
         q = int(quantity)
         shopping_cart = cache.get(self.session) or {}
-        if str(product.id) in shopping_cart:
-            amount = int(cache.get(self.session)[str(product.id)])
+        if str(product.pk) in shopping_cart:
+            amount = int(cache.get(self.session)[str(product.pk)])
             new_quantity = max(amount - q, 0)
             if new_quantity == 0:
-                del shopping_cart[str(product.id)]
+                del shopping_cart[str(product.pk)]
             else:
-                shopping_cart[str(product.id)] = new_quantity
+                shopping_cart[str(product.pk)] = new_quantity
             self.save(shopping_cart)
 
     def save(self, shopping_cart):
@@ -68,8 +68,8 @@ class Cart(object):
         """
         try:
             cart = cache.get(self.session)
-            if str(product.id) in cart:
-                del cart[str(product.id)]
+            if str(product.pk) in cart:
+                del cart[str(product.pk)]
                 cache.set(self.session, cart)
         except:
             raise Exception
@@ -80,23 +80,23 @@ class Cart(object):
             del cache.get(self.session)[str(last_product['id'])]
 
     def decrement(self, product):
-        if str(product.id) in cache.get(self.session):
-            new_quantity = int(cache.get(self.session)[str(product.id)]) - 1
+        if str(product.pk) in cache.get(self.session):
+            new_quantity = int(cache.get(self.session)[str(product.pk)]) - 1
             if new_quantity < 1:
-                del cache.get(self.session)[str(product.id)]
+                del cache.get(self.session)[str(product.pk)]
             else:
-                cache.get(self.session)[str(product.id)] = new_quantity
+                cache.get(self.session)[str(product.pk)] = new_quantity
 
     # mio
     def update_quant(self, product, value):
         q = int(value)
         stock = int(product.stock)
-        if str(product.id) in cache.get(self.session):
+        if str(product.pk) in cache.get(self.session):
             if q >= stock:
                 new_quantity = stock
             else:
                 new_quantity = q
-            cache.get(self.session)[str(product.id)] = new_quantity
+            cache.get(self.session)[str(product.pk)] = new_quantity
 
     def clear(self):
         # empty cart

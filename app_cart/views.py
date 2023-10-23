@@ -1,64 +1,56 @@
-
 from django.core.cache import cache
 from django.http import HttpRequest, JsonResponse
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 
-
 from app_cart.cart import Cart
 from core.models import Product
+from core.serializers import ProductSerializer
 from engimovCaribe.settings import CART_SESSION_ID
 
 
-# @require_POST
 @method_decorator(csrf_exempt, require_POST)
-def add(request: HttpRequest, id: int):
+def add(request: HttpRequest, id):
     cart = Cart(request)
-    product = Product.objects.filter(id=id).first()
+    product = Product.objects.filter(pk=id).first()
     cart.add(product=product)
     return JsonResponse({
-        'product': product.toJSON(),
+        'product': ProductSerializer(product).data,
         "result": "ok",
-        "amount": cache.get(cart.session)[str(product.id)]
+        "amount": cache.get(cart.session)[str(product.pk)]
     })
 
 
 @method_decorator(csrf_exempt, require_POST)
-def cart_detail(request: HttpRequest, id: int):
+def cart_detail(request: HttpRequest, id):
     cart = Cart(request)
     item = cart.get(id)
 
     return JsonResponse({"result": item})
 
 
-
-
-
-# @require_POST
 @method_decorator(csrf_exempt, require_POST)
-def remove_quant(request: HttpRequest, id: int, quantity: int):
-    Cart(request).add(product=Product.objects.filter(id=id).first(), quantity=quantity, action="remove")
+def remove_quant(request: HttpRequest, id, quantity: int):
+    Cart(request).add(product=Product.objects.filter(pk=id).first(), quantity=quantity, action="remove")
     return JsonResponse({"result": "ok"})
 
 
-# @method_decorator(require_POST)
 @method_decorator(csrf_exempt, require_POST)
-def update_quant(request: HttpRequest, id: int, value: int):
+def update_quant(request: HttpRequest, id, value: int):
     cart = Cart(request)
     product = Product.objects.get(pk=id)
     cart.update_quant(product=product, value=value)
     return JsonResponse({
         "result": "ok",
-        'product': product.toJSON(),
+        'product': ProductSerializer(product).data,
         "amount": cart.session[CART_SESSION_ID].get(id, {"quantity": value})["quantity"],
         'price': f'{product.price}'
     })
 
 
-# @method_decorator(require_POST)
 @method_decorator(csrf_exempt, require_POST)
-def update_quant_bl(request: HttpRequest, id: int, value: int):
+def update_quant_bl(request: HttpRequest, id, value: int):
     cart = Cart(request)
     product = Product.objects.get(pk=id)
     cart.update_quant(product=product, value=value)
@@ -69,21 +61,19 @@ def update_quant_bl(request: HttpRequest, id: int, value: int):
     return JsonResponse({
         "result": "ok",
         "total": total,
-        'product': product.toJSON(),
+        'product': ProductSerializer(product).data,
         "amount": cart.session[CART_SESSION_ID].get(id, {"quantity": value})["quantity"],
         'price': f'{product.price}'
     })
 
 
-# @require_POST
 @method_decorator(csrf_exempt, require_POST)
-def remove(request: HttpRequest, id: int):
-    Cart(request).decrement(product=Product.objects.filter(id=id).first())
+def remove(request: HttpRequest, id):
+    Cart(request).decrement(product=Product.objects.filter(pk=id).first())
     request.session['active'] = '2'
     return JsonResponse({"result": "ok"})
 
 
-# @require_POST
 @method_decorator(csrf_exempt, require_POST)
 def cart_pop(request: HttpRequest, ):
     cart = Cart(request)
@@ -95,37 +85,38 @@ def cart_pop(request: HttpRequest, ):
     })
 
 
-# @require_POST
 @method_decorator(csrf_exempt, require_POST)
-def add_quant(request: HttpRequest, id: int, quantity: int):
+def add_quant(request: HttpRequest, id, quantity: int):
     cart = Cart(request)
-    product = Product.objects.get(id=id)
+    product = Product.objects.get(pk=id)
     cart.add(product, quantity)
     return JsonResponse({
-        'product': product.toJSON(),
+        'product': ProductSerializer(product).data,
         "result": "ok",
-        "amount": cache.get(cart.session)[str(product.id)]
+        "amount": cache.get(cart.session)[str(product.pk)]
     })
 
+
 @method_decorator(csrf_exempt, require_POST)
-def decrement_quant(request: HttpRequest, id: int, quantity: int):
+def decrement_quant(request: HttpRequest, id, quantity: int):
     cart = Cart(request)
-    product = Product.objects.get(id=id)
+    product = Product.objects.get(pk=id)
     cart.subtract(product, quantity)
     return JsonResponse({
-        'product': product.toJSON(),
+        'product': ProductSerializer(product).data,
         "result": "ok",
-        "amount": cache.get(cart.session)[str(product.id)]
+        "amount": cache.get(cart.session)[str(product.pk)]
     })
 
+
 @method_decorator(csrf_exempt, require_POST)
-def item_clear(request: HttpRequest, id: int):
+def item_clear(request: HttpRequest, id):
     try:
         cart = Cart(request)
         product = Product.objects.get(pk=id)
         cart.remove(product=product)
         return JsonResponse({
-            'product': product.toJSON(),
+            'product': ProductSerializer(product).data,
             "result": "ok",
             "amount": cart.get_sum_of("quantity")
         })
@@ -134,6 +125,7 @@ def item_clear(request: HttpRequest, id: int):
             "status": 403,
             "result": "ko",
         })
+
 
 @method_decorator(csrf_exempt, require_POST)
 def cart_clear(request: HttpRequest):
