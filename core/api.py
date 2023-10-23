@@ -89,7 +89,7 @@ class ProductViewSet(BaseProductViewSet):
 
 
 class ProductSaleViewSet(BaseProductViewSet):
-    queryset = Product.objects.filter(visible=True, is_sale=True).order_by('sku')
+    queryset = Product.objects.filter(visible=True, is_sale=True).order_by('-date_updated')
     serializer_class = ProductSerializer
     pagination_class = StandardResultsSetPagination
 

@@ -16,10 +16,15 @@ class WorkCategorySerializer(serializers.ModelSerializer):
 
 
 class ProductSerializer(serializers.ModelSerializer):
+    short_description = serializers.SerializerMethodField()
+
     class Meta:
         model = Product
-        fields = ('sku', 'category', 'name', 'description', 'image', 'price', 'visible', 'stock')
+        fields = ('sku', 'category', 'name', 'description', 'image', 'price', 'visible', 'stock', 'short_description')
         depth = 1
+
+    def get_short_description(self, obj):
+        return obj.description if len(obj.description) < 100 else obj.description[:100] + '...'
 
 
 class TestimonialSerializer(serializers.ModelSerializer):
