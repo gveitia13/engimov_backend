@@ -17,6 +17,7 @@ class WorkCategorySerializer(serializers.ModelSerializer):
 
 class ProductSerializer(serializers.ModelSerializer):
     short_description = serializers.SerializerMethodField()
+    quantity = serializers.SerializerMethodField()
 
     class Meta:
         model = Product
@@ -25,6 +26,9 @@ class ProductSerializer(serializers.ModelSerializer):
 
     def get_short_description(self, obj):
         return obj.description if len(obj.description) < 100 else obj.description[:100] + '...'
+
+    def get_quantity(self, obj):
+        return 1
 
 
 class TestimonialSerializer(serializers.ModelSerializer):
