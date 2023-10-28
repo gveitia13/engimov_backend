@@ -21,7 +21,9 @@ class ProductSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Product
-        fields = ('sku', 'category', 'name', 'description', 'image', 'price', 'visible', 'stock', 'short_description')
+        fields = (
+            'sku', 'category', 'name', 'description', 'image', 'price', 'visible', 'stock', 'short_description',
+            'quantity')
         depth = 1
 
     def get_short_description(self, obj):
