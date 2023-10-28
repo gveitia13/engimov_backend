@@ -53,20 +53,11 @@ def cart_detail(request: HttpRequest, pk):
 
 
 @api_view(['POST'])
-def remove_quant(request: HttpRequest, pk, quantity: int):
-    product = Product.objects.filter(pk=pk).first()
-    if product:
-        Cart(request).add(product=product, quantity=quantity)
-        return Response({"result": "ok"}, status=status.HTTP_200_OK)
-    return Response(status=status.HTTP_404_NOT_FOUND)
-
-
-@api_view(['POST'])
-def update_quant(request: HttpRequest, pk, value: int):
+def update_quant(request: HttpRequest, pk, quantity: int):
     cart = Cart(request)
     product = Product.objects.filter(pk=pk).first()
     if product:
-        cart.update_quant(product=product, value=value)
+        cart.update_quant(product=product, quantity=quantity)
         total = 0
         for item in cart.all():
             total = total + (cart.session[CART_SESSION_ID].get(item)['product']['price'] *
@@ -82,7 +73,7 @@ def update_quant(request: HttpRequest, pk, value: int):
 
 
 @api_view(['POST'])
-def remove(request: HttpRequest, pk):
+def decrement(request: HttpRequest, pk):
     product = Product.objects.filter(pk=pk).first()
     if product:
         Cart(request).decrement(product=product)
@@ -128,7 +119,7 @@ def decrement_quant(request: HttpRequest, pk, quantity: int):
 
 
 @api_view(['POST'])
-def item_clear(request: HttpRequest, pk):
+def remove(request: HttpRequest, pk):
     try:
         cart = Cart(request)
         product = Product.objects.get(pk=pk)
