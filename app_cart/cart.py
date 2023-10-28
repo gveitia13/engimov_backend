@@ -1,4 +1,5 @@
-from django.core.cache import cache
+from core.serializers import ProductSerializer
+from engimovCaribe import settings
 
 
 class Wrapper(dict):
@@ -9,98 +10,103 @@ class Wrapper(dict):
 
 
 class Cart(object):
-    def __init__(self, request=None):
-        if request is not None:
-            self.request = request
-            self.session = request.headers.get('X-Session-ID')
+    def __init__(self, request):
+        self.request = request
+        self.session = request.session
+        cart = self.session.get(settings.CART_SESSION_ID)
+        if not cart:  # or True:
+            # save an empty cart in the session
+            cart = self.session[settings.CART_SESSION_ID] = {}
+        self.cart = cart
 
     def add(self, product, quantity=1):
         """
-        Add a product to the cart or update its quantity.
+        Add a product to the cart its quantity.
         """
         q = int(quantity)
         stock = int(product.stock)
-        shopping_cart = cache.get(self.session) or {}
-        if str(product.pk) not in shopping_cart:
-            shopping_cart[str(product.pk)] = q if q <= stock else stock
+        if str(product.pk) not in self.cart.keys():
+            self.cart[str(product.pk)] = {
+                "pk": str(product.pk),
+                'product': ProductSerializer(product).data,
+                'quantity': q if q <= stock else stock
+            }
+            print(self.cart[str(product.pk)])
         else:
-            amount = int(cache.get(self.session)[str(product.pk)])
-            shopping_cart[str(product.pk)] = amount + q if (amount + q) <= stock else stock
-        self.save(shopping_cart)
+            amount = int(self.cart[str(product.pk)]['quantity'])
+            self.cart[str(product.pk)]['quantity'] = amount + q if (amount + q) <= stock else stock
+            print(self.cart[str(product.pk)])
+        self.save()
 
     def subtract(self, product, quantity=1):
         """
         Subtract a product from the cart or update its quantity.
         """
         q = int(quantity)
-        shopping_cart = cache.get(self.session) or {}
-        if str(product.pk) in shopping_cart:
-            amount = int(cache.get(self.session)[str(product.pk)])
+        if str(product.pk) in self.cart.keys():
+            amount = int(self.cart[str(product.pk)]['quantity'])
             new_quantity = max(amount - q, 0)
             if new_quantity == 0:
-                del shopping_cart[str(product.pk)]
+                del self.cart[str(product.pk)]
             else:
-                shopping_cart[str(product.pk)] = new_quantity
-            self.save(shopping_cart)
+                self.cart[str(product.pk)]['quantity'] = new_quantity
+            self.save()
 
-    def save(self, shopping_cart):
+    def save(self):
         # update the session cart
-        cache.set(self.session, shopping_cart, 60 * 60 * 4)
+        self.session[settings.CART_SESSION_ID] = self.cart
+        # mark the session as "modified" to make sure it is saved
+        self.session.modified = True
 
-    def get(self, id):
-        if str(id) in cache.get(self.session):
-            return cache.get(self.session)[str(id)]
-        else:
-            return 0
+    def get(self, pk):
+        if self.session[settings.CART_SESSION_ID][pk]:
+            return self.session[settings.CART_SESSION_ID][pk]
+        return None
 
     def all(self):
-        return list(cache.get(self.session).keys())
+        return list(self.session[settings.CART_SESSION_ID].values())
 
     def set(self, key, value):
-        cache.get(self.session)[str(key)] = value
+        self.cart[key] = value
+        self.save()
 
     def get_sum_of(self, key):
-        return sum(map(lambda x: float(x), cache.get(self.session).values()))
+        return sum(map(lambda x: float(x[key]), self.all()))
 
     def remove(self, product):
         """
         Remove a product from the cart.
         """
-        try:
-            cart = cache.get(self.session)
-            if str(product.pk) in cart:
-                del cart[str(product.pk)]
-                cache.set(self.session, cart)
-        except:
-            raise Exception
+        if str(product.pk) in self.cart:
+            del self.cart[str(product.pk)]
+            self.save()
 
     def pop(self):
-        if len(cache.get(self.session)) > 0:
-            last_product = list(cache.get(self.session).values()).pop()
-            del cache.get(self.session)[str(last_product['id'])]
+        if len(self.all()) > 0:
+            del self.session[settings.CART_SESSION_ID][str(self.all().pop()['pk'])]
+            self.save()
 
     def decrement(self, product):
-        if str(product.pk) in cache.get(self.session):
-            new_quantity = int(cache.get(self.session)[str(product.pk)]) - 1
+        if str(product.pk) in self.session[settings.CART_SESSION_ID]:
+            new_quantity = self.cart[str(product.pk)]['quantity'] - 1
             if new_quantity < 1:
-                del cache.get(self.session)[str(product.pk)]
+                del self.cart[str(product.pk)]
             else:
-                cache.get(self.session)[str(product.pk)] = new_quantity
+                self.cart[str(product.pk)]['quantity'] = new_quantity
+        self.save()
 
     # mio
     def update_quant(self, product, value):
         q = int(value)
         stock = int(product.stock)
-        if str(product.pk) in cache.get(self.session):
+        if str(product.pk) in self.session[settings.CART_SESSION_ID]:
             if q >= stock:
                 new_quantity = stock
             else:
                 new_quantity = q
-            cache.get(self.session)[str(product.pk)] = new_quantity
+            self.cart[str(product.id)]['quantity'] = new_quantity
 
     def clear(self):
         # empty cart
-        cart = cache.get(self.session)
-        for product_id in list(cart.keys()):
-            del cart[str(product_id)]
-        cache.set(self.session, cart)
+        self.session[settings.CART_SESSION_ID] = {}
+        self.session.modified = True

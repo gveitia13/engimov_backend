@@ -31,59 +31,59 @@ class CartView(APIView):
 
 
 @api_view(['POST'])
-def add(request: HttpRequest, id):
+def add(request: HttpRequest, pk):
     cart = Cart(request)
-    product = Product.objects.filter(pk=id).first()
+    product = Product.objects.filter(pk=pk).first()
     if product:
         cart.add(product=product)
         return Response({
             'result': {
                 'product': ProductSerializer(product).data,
-                "amount": cache.get(cart.session)[str(product.pk)]
+                "amount": cart.session[CART_SESSION_ID].get(pk)["quantity"]
             }
         }, status=status.HTTP_200_OK)
     return Response(status=status.HTTP_404_NOT_FOUND)
 
 
 @api_view(['POST'])
-def cart_detail(request: HttpRequest, id):
+def cart_detail(request: HttpRequest, pk):
     cart = Cart(request)
-    item = cart.get(id)
+    item = cart.get(pk)
     return Response({"result": item}, status=status.HTTP_200_OK)
 
 
 @api_view(['POST'])
-def remove_quant(request: HttpRequest, id, quantity: int):
-    product = Product.objects.filter(pk=id).first()
+def remove_quant(request: HttpRequest, pk, quantity: int):
+    product = Product.objects.filter(pk=pk).first()
     if product:
-        Cart(request).add(product=product, quantity=quantity, action="remove")
+        Cart(request).add(product=product, quantity=quantity)
         return Response({"result": "ok"}, status=status.HTTP_200_OK)
     return Response(status=status.HTTP_404_NOT_FOUND)
 
 
 @api_view(['POST'])
-def update_quant(request: HttpRequest, id, value: int):
+def update_quant(request: HttpRequest, pk, value: int):
     cart = Cart(request)
-    product = Product.objects.filter(pk=id).first()
+    product = Product.objects.filter(pk=pk).first()
     if product:
         cart.update_quant(product=product, value=value)
         total = 0
-        for item in cart.session[CART_SESSION_ID]:
+        for item in cart.all():
             total = total + (cart.session[CART_SESSION_ID].get(item)['product']['price'] *
                              cart.session[CART_SESSION_ID].get(item)['quantity'])
         return Response({
             "result": {
                 "total": total,
                 'product': ProductSerializer(product).data,
-                "amount": cart.session[CART_SESSION_ID].get(id, {"quantity": value})["quantity"],
+                "amount": cart.session[CART_SESSION_ID].get(pk)["quantity"],
             }
         }, status=status.HTTP_200_OK)
     return Response(status=status.HTTP_404_NOT_FOUND)
 
 
 @api_view(['POST'])
-def remove(request: HttpRequest, id):
-    product = Product.objects.filter(pk=id).first()
+def remove(request: HttpRequest, pk):
+    product = Product.objects.filter(pk=pk).first()
     if product:
         Cart(request).decrement(product=product)
         return Response({"result": "ok"}, status=status.HTTP_200_OK)
@@ -98,40 +98,40 @@ def cart_pop(request: HttpRequest, ):
 
 
 @api_view(['POST'])
-def add_quant(request: HttpRequest, id, quantity: int):
+def add_quant(request: HttpRequest, pk, quantity: int):
     cart = Cart(request)
-    product = Product.objects.filter(pk=id).first()
+    product = Product.objects.filter(pk=pk).first()
     if product:
         cart.add(product, quantity)
         return Response({
             "result": {
                 'product': ProductSerializer(product).data,
-                "amount": cache.get(cart.session)[str(product.pk)]
+                "amount": cart.session[CART_SESSION_ID].get(pk)["quantity"]
             }
         }, status=status.HTTP_200_OK)
     return Response(status=status.HTTP_404_NOT_FOUND)
 
 
 @api_view(['POST'])
-def decrement_quant(request: HttpRequest, id, quantity: int):
+def decrement_quant(request: HttpRequest, pk, quantity: int):
     cart = Cart(request)
-    product = Product.objects.filter(pk=id).first()
+    product = Product.objects.filter(pk=pk).first()
     if product:
         cart.subtract(product, quantity)
         return Response({
             'result': {
                 'product': ProductSerializer(product).data,
-                "amount": cache.get(cart.session)[str(product.pk)]
+                "amount": cart.session[CART_SESSION_ID].get(pk)["quantity"]
             }
         }, status=status.HTTP_200_OK)
     return Response(status=status.HTTP_404_NOT_FOUND)
 
 
 @api_view(['POST'])
-def item_clear(request: HttpRequest, id):
+def item_clear(request: HttpRequest, pk):
     try:
         cart = Cart(request)
-        product = Product.objects.get(pk=id)
+        product = Product.objects.get(pk=pk)
         cart.remove(product=product)
         return Response({
             'result': {
