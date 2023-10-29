@@ -277,6 +277,5 @@ CKEDITOR_CONFIGS = {
         "filebrowserWindowHeight": 725,
     }
 }
-
 CART_SESSION_ID = "cart"
 SESSION_COOKIE_AGE = 7200

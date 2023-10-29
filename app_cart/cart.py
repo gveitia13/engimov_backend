@@ -25,32 +25,33 @@ class Cart(object):
         """
         q = int(quantity)
         stock = int(product.stock)
+        prod = ProductSerializer(product).data
+
         if str(product.pk) not in self.cart.keys():
+            prod.update({'quantity': q if q <= stock else stock})
+
             self.cart[str(product.pk)] = {
                 "pk": str(product.pk),
-                'product': ProductSerializer(product).data,
-                'quantity': q if q <= stock else stock
+                'product': prod,
             }
             print(self.cart[str(product.pk)])
         else:
-            amount = int(self.cart[str(product.pk)]['quantity'])
-            self.cart[str(product.pk)]['quantity'] = amount + q if (amount + q) <= stock else stock
+            amount = int(self.cart[str(product.pk)]['product']['quantity'])
+            self.cart[str(product.pk)]['product']['quantity'] = amount + q if (amount + q) <= stock else stock
             print(self.cart[str(product.pk)])
-        print(self.all())
         self.save()
 
     def subtract(self, product, quantity=1):
         """
         Subtract a product from the cart or update its quantity.
         """
-        q = int(quantity)
         if str(product.pk) in self.cart.keys():
-            amount = int(self.cart[str(product.pk)]['quantity'])
-            new_quantity = max(amount - q, 0)
+            amount = int(self.get_product(product.pk)['quantity'])
+            new_quantity = max(amount - int(quantity), 0)
             if new_quantity == 0:
                 del self.cart[str(product.pk)]
             else:
-                self.cart[str(product.pk)]['quantity'] = new_quantity
+                self.cart[str(product.pk)]['product']['quantity'] = new_quantity
             self.save()
 
     def save(self):
@@ -61,44 +62,46 @@ class Cart(object):
 
     # Devuelve el objeto en el formato que está en el carro
     def get(self, pk):
-        if self.session[settings.CART_SESSION_ID][pk]:
+        if self.session[settings.CART_SESSION_ID].get(pk):
             return self.session[settings.CART_SESSION_ID][pk]
         return None
 
-    def all(self):
+    def get_product(self, pk):
+        if self.session[settings.CART_SESSION_ID].get(pk):
+            return self.session[settings.CART_SESSION_ID][pk]['product']
+        return None
+
+    def get_all(self):
         return list(self.session[settings.CART_SESSION_ID].values())
+
+    def get_all_products(self):
+        return map(lambda e: e['product'], self.get_all())
 
     def set(self, key, value):
         self.cart[key] = value
         self.save()
 
     def get_sum_of(self, key):
-        return sum(map(lambda x: float(x[key]), self.all()))
+        return sum(map(lambda x: float(x[key]), self.get_all_products()))
 
     def remove(self, product):
         """
         Remove a product from the cart.
         """
-        if str(product.pk) in self.cart:
+        if str(product.pk) in self.cart.keys():
             del self.cart[str(product.pk)]
-            self.save()
-
-    def pop(self):
-        if len(self.all()) > 0:
-            del self.session[settings.CART_SESSION_ID][str(self.all().pop()['pk'])]
             self.save()
 
     def decrement(self, product, quantity=1):
         if str(product.pk) in self.session[settings.CART_SESSION_ID]:
-            new_quantity = self.cart[str(product.pk)]['quantity'] - quantity
+            new_quantity = self.cart[str(product.pk)]['product']['quantity'] - quantity
             if new_quantity < 1:
                 del self.cart[str(product.pk)]
             else:
-                self.cart[str(product.pk)]['quantity'] = new_quantity
+                self.cart[str(product.pk)]['product']['quantity'] = new_quantity
         self.save()
 
-    # mio
-    def update_quant(self, product, quantity):
+    def update_quantity(self, product, quantity):
         q = int(quantity)
         stock = int(product.stock)
         if str(product.pk) in self.session[settings.CART_SESSION_ID]:
@@ -106,9 +109,13 @@ class Cart(object):
                 new_quantity = stock
             else:
                 new_quantity = q
-            self.cart[str(product.id)]['quantity'] = new_quantity
+            self.cart[str(product.pk)]['product']['quantity'] = new_quantity
+            self.save()
 
     def clear(self):
         # empty cart
         self.session[settings.CART_SESSION_ID] = {}
         self.session.modified = True
+
+    def get_total(self):
+        return sum(map(lambda x: float(x['price']) * int(x['quantity']), self.get_all_products()))
