@@ -19,7 +19,7 @@ class Cart(object):
             cart = self.session[settings.CART_SESSION_ID] = {}
         self.cart = cart
 
-    def add(self, product, quantity=1):
+    def add(self, product, quantity):
         """
         Add a product to the cart its quantity.
         """
@@ -92,7 +92,7 @@ class Cart(object):
             del self.cart[str(product.pk)]
             self.save()
 
-    def decrement(self, product, quantity=1):
+    def decrement(self, product, quantity):
         if str(product.pk) in self.session[settings.CART_SESSION_ID]:
             new_quantity = self.cart[str(product.pk)]['product']['quantity'] - quantity
             if new_quantity < 1:

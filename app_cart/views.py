@@ -32,22 +32,7 @@ def product_details(request, pk):
 
 
 @api_view(['POST'])
-def add(request, pk):
-    cart = Cart(request)
-    product = Product.objects.filter(pk=pk).first()
-    if product:
-        cart.add(product=product)
-        return Response({
-            'result': {
-                'total': cart.get_total(),
-                'product': cart.get_product(pk),
-            }
-        }, status=status.HTTP_200_OK)
-    return Response(status=status.HTTP_404_NOT_FOUND)
-
-
-@api_view(['POST'])
-def add_quantity(request, pk, quantity: int):
+def add(request, pk, quantity: int):
     cart = Cart(request)
     product = Product.objects.filter(pk=pk).first()
     if product:
@@ -63,7 +48,7 @@ def add_quantity(request, pk, quantity: int):
 
 
 @api_view(['POST'])
-def update_quantity(request, pk, quantity: int):
+def update(request, pk, quantity: int):
     cart = Cart(request)
     product = Product.objects.filter(pk=pk).first()
     if product and cart.get(pk):
@@ -82,22 +67,7 @@ def update_quantity(request, pk, quantity: int):
 
 
 @api_view(['POST'])
-def decrement(request, pk):
-    cart = Cart(request)
-    product = Product.objects.filter(pk=pk).first()
-    if product and cart.get(pk):
-        cart.decrement(product=product)
-        return Response({
-            "result": {
-                'total': cart.get_total(),
-                'product': cart.get_product(pk),
-            }
-        }, status=status.HTTP_200_OK)
-    return Response(status=status.HTTP_404_NOT_FOUND)
-
-
-@api_view(['POST'])
-def decrement_quantity(request, pk, quantity: int):
+def decrement(request, pk, quantity: int):
     cart = Cart(request)
     product = Product.objects.filter(pk=pk).first()
     if product and cart.get(pk):
@@ -128,7 +98,7 @@ def remove(request, pk):
 
 
 @api_view(['POST'])
-def cart_clear(request):
+def clear(request):
     cart = Cart(request)
     cart.clear()
     return Response({

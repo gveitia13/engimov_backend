@@ -46,7 +46,7 @@ urlpatterns = [
     path('', lambda request: redirect('/admin/')),
     path('api/', include('core.urls')),
     path('api/', include('sections.urls')),
-    path('cart/', include('app_cart.urls')),
+    path('api/cart/', include('app_cart.urls')),
 ]
 if settings.DEBUG:
     urlpatterns += staticfiles_urlpatterns()
