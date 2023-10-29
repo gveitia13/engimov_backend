@@ -12,21 +12,19 @@ from engimovCaribe.settings import CART_SESSION_ID
 
 
 class CartView(APIView):
-    def get(self, request, session_id):
+    def get(self, request):
         # Construct the cache key using the session ID
-        cache_key = f'{session_id}'
-        # Retrieve the shopping cart from the cache
-        shopping_cart = cache.get(cache_key) or {}
+        cart = Cart(request)
         # Calculate the total price of the products in the shopping cart
         total = 0
-        products = Product.objects.in_bulk(shopping_cart.keys())
-        for product in products.values():
-            total += (product.price * shopping_cart[str(product.id)])
+        products = Product.objects.in_bulk(cart.session[CART_SESSION_ID].keys()).values()
+        for product in products:
+            total += (product.price * cart.get(str(product.pk))['quantity'])
         # Return the shopping cart as a JSON response
         return Response({
-            'products': shopping_cart,
+            'products': cart.all(),
             'total': total,
-            'cantReal': len(shopping_cart)
+            'cantReal': len(cart.all())
         })
 
 

@@ -36,6 +36,7 @@ class Cart(object):
             amount = int(self.cart[str(product.pk)]['quantity'])
             self.cart[str(product.pk)]['quantity'] = amount + q if (amount + q) <= stock else stock
             print(self.cart[str(product.pk)])
+        print(self.all())
         self.save()
 
     def subtract(self, product, quantity=1):
@@ -58,6 +59,7 @@ class Cart(object):
         # mark the session as "modified" to make sure it is saved
         self.session.modified = True
 
+    # Devuelve el objeto en el formato que está en el carro
     def get(self, pk):
         if self.session[settings.CART_SESSION_ID][pk]:
             return self.session[settings.CART_SESSION_ID][pk]

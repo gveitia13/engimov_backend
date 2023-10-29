@@ -21,5 +21,5 @@ urlpatterns = [
     path("remove/<pk>/", remove, name="cart_remove"),
     # Detalles de un producto específico en el carrito o None
     path("details/<pk>/", cart_detail, name="cart_detail"),
-    path('<str:session_id>/', CartView.as_view()),
+    path('details/', CartView.as_view()),
 ]
