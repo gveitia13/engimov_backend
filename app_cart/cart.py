@@ -105,12 +105,17 @@ class Cart(object):
         q = int(quantity)
         stock = int(product.stock)
         if str(product.pk) in self.session[settings.CART_SESSION_ID]:
+            if q == 0:
+                self.remove(product)
+                return
             if q >= stock:
                 new_quantity = stock
             else:
                 new_quantity = q
             self.cart[str(product.pk)]['product']['quantity'] = new_quantity
             self.save()
+        else:
+            self.add(product, quantity)
 
     def clear(self):
         # empty cart

@@ -51,7 +51,7 @@ def add(request, pk, quantity: int):
 def update(request, pk, quantity: int):
     cart = Cart(request)
     product = Product.objects.filter(pk=pk).first()
-    if product and cart.get(pk):
+    if product:
         cart.update_quantity(product=product, quantity=quantity)
         total = 0
         for item in cart.get_all():
