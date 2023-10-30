@@ -12,11 +12,14 @@ class Wrapper(dict):
 class Cart(object):
     def __init__(self, request):
         self.request = request
+        # self.session = request.session
         self.session = request.session
-        cart = self.session.get(settings.CART_SESSION_ID)
-        if not cart:  # or True:
-            # save an empty cart in the session
-            cart = self.session[settings.CART_SESSION_ID] = {}
+        self.session[settings.CART_SESSION_ID] = request.headers.get('X-Session-ID')
+        cart = self.session.get(settings.CART_SESSION_ID) or {}
+        # cart = self.session
+        # if not cart:  # or True:
+        #     # save an empty cart in the session
+        #     cart = self.session[settings.CART_SESSION_ID] = {}
         self.cart = cart
 
     def add(self, product, quantity):
@@ -73,6 +76,7 @@ class Cart(object):
 
     def get_all(self):
         return list(self.session[settings.CART_SESSION_ID].values())
+        # return list(self.cart.values())
 
     def get_all_products(self):
         return list(map(lambda e: e['product'], self.get_all()))

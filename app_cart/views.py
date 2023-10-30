@@ -14,10 +14,10 @@ def details(request):
     # Construct the cache key using the session ID
     cart = Cart(request)
     # Calculate the total price of the products in the shopping cart
-    total = 0
-    products = Product.objects.in_bulk(cart.session[CART_SESSION_ID].keys()).values()
-    for product in products:
-        total += (product.price * cart.get_product(str(product.pk))['quantity'])
+    # total = 0
+    # products = Product.objects.in_bulk(cart.session[CART_SESSION_ID].keys()).values()
+    # for product in products:
+    #     total += (product.price * cart.get_product(str(product.pk))['quantity'])
     # Return the shopping cart as a JSON response
     return Response({
         'products': cart.get_all_products(),
