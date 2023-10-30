@@ -1,3 +1,5 @@
+import json
+
 from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
@@ -37,10 +39,12 @@ def add(request, pk, quantity: int):
     product = Product.objects.filter(pk=pk).first()
     if product:
         cart.add(product, quantity)
+        print(json.dumps(cart.get_all_products(), indent=4))
         return Response({
             "result": {
                 'total': cart.get_total(),
                 'product': cart.get_product(pk),
+                'products': cart.get_all_products(),
                 # "amount": cart.session[CART_SESSION_ID].get(pk)["quantity"]
             }
         }, status=status.HTTP_200_OK)

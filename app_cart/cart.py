@@ -34,11 +34,11 @@ class Cart(object):
                 "pk": str(product.pk),
                 'product': prod,
             }
-            print(self.cart[str(product.pk)])
+            # print(self.cart[str(product.pk)])
         else:
             amount = int(self.cart[str(product.pk)]['product']['quantity'])
             self.cart[str(product.pk)]['product']['quantity'] = amount + q if (amount + q) <= stock else stock
-            print(self.cart[str(product.pk)])
+            # print(self.cart[str(product.pk)])
         self.save()
 
     def subtract(self, product, quantity=1):
@@ -75,7 +75,7 @@ class Cart(object):
         return list(self.session[settings.CART_SESSION_ID].values())
 
     def get_all_products(self):
-        return map(lambda e: e['product'], self.get_all())
+        return list(map(lambda e: e['product'], self.get_all()))
 
     def set(self, key, value):
         self.cart[key] = value
