@@ -10,17 +10,17 @@ class Wrapper(dict):
 
 
 class Cart(object):
-    def __init__(self, request):
-        self.request = request
-        # self.session = request.session
-        self.session = request.session
-        self.session[settings.CART_SESSION_ID] = request.headers.get('X-Session-ID')
-        cart = self.session.get(settings.CART_SESSION_ID) or {}
-        # cart = self.session
-        # if not cart:  # or True:
-        #     # save an empty cart in the session
-        #     cart = self.session[settings.CART_SESSION_ID] = {}
-        self.cart = cart
+    def __init__(self, request=None):
+        if request is not None:
+            self.request = request
+            self.session = request.session
+            self.session[settings.CART_SESSION_ID] = request.headers.get('X-Session-ID')
+            # cart = self.session.get(settings.CART_SESSION_ID) or {}
+            cart = self.session
+            # if not cart:  # or True:
+            #     # save an empty cart in the session
+            #     cart = self.session[settings.CART_SESSION_ID] = {}
+            self.cart = cart
 
     def add(self, product, quantity):
         """
