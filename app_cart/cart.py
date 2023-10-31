@@ -15,11 +15,15 @@ class Cart(object):
             self.request = request
             self.session = request.session
             # self.session[settings.CART_SESSION_ID] = request.headers.get('X-Session-ID')
-            cart = self.session.get(settings.CART_SESSION_ID)
-            # cart = self.session
-            if not cart:  # or True:
-                #     # save an empty cart in the session
-                cart = self.session[settings.CART_SESSION_ID] = {}
+
+            # cart = self.session.get(settings.CART_SESSION_ID)
+            # if not cart:  # or True:
+            #     # save an empty cart in the session
+            # cart = self.session[settings.CART_SESSION_ID] = {}
+            if not self.session.get(request.headers.get('X-Session-ID')):
+                self.session[request.headers.get('X-Session-ID')] = {}
+
+            cart = self.session[request.headers.get('X-Session-ID')]
             self.cart = cart
 
     def add(self, product, quantity):
@@ -59,7 +63,7 @@ class Cart(object):
 
     def save(self):
         # update the session cart
-        self.session[settings.CART_SESSION_ID] = self.cart
+        # self.session[settings.CART_SESSION_ID] = self.cart
         # mark the session as "modified" to make sure it is saved
         self.session.modified = True
 
@@ -70,13 +74,13 @@ class Cart(object):
         return None
 
     def get_product(self, pk):
-        if self.session[settings.CART_SESSION_ID].get(pk):
-            return self.session[settings.CART_SESSION_ID][pk]['product']
+        if self.cart.get(pk):
+            return self.cart[pk]['product']
         return None
 
     def get_all(self):
-        return list(self.session[settings.CART_SESSION_ID].values())
-        # return list(self.cart.values())
+        # return list(self.session[settings.CART_SESSION_ID].values())
+        return list(self.cart.values())
 
     def get_all_products(self):
         return list(map(lambda e: e['product'], self.get_all()))

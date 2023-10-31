@@ -28,7 +28,11 @@ DEBUG = True
 ALLOWED_HOSTS = ['*']
 CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_CREDENTIALS = True
-CORS_ALLOW_HEADERS = ['currency', 'X-Session-ID', 'content-type']
+CORS_ALLOW_HEADERS = ['currency', 'X-Session-ID', 'content-type', 'cookie']
+CORS_ORIGIN_WHITELIST = [
+    'http://localhost:4200',  # Dominio de tu aplicación Angular
+]
+# CORS_ALLOW_HEADERS = ['*']
 # CORS_ALLOW_CREDENTIALS = True
 # CSRF_TRUSTED_ORIGINS = ['https://*.127.0.0.1', 'https://*.render.com', 'https://*.onrender.com']
 
