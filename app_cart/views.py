@@ -12,6 +12,8 @@ from engimovCaribe.settings import CART_SESSION_ID
 @api_view(['POST'])
 def details(request):
     print(request.headers)
+    request.headers
+    print('sesiiom   ', request.session)
     # Construct the cache key using the session ID
     cart = Cart(request)
     # Calculate the total price of the products in the shopping cart
