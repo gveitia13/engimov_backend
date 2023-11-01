@@ -34,7 +34,7 @@ from corsheaders.defaults import default_headers
 
 CORS_ALLOW_HEADERS = [*default_headers, 'currency', 'X-Session-ID', 'cookie', 'Access-Control-Allow-Origin',
                       'accept-encoding', 'dnt', 'origin']
-print('brr', CORS_ALLOW_HEADERS)
+
 # CORS_ALLOWED_ORIGINS = CORS_ALLOW_HEADERS
 CORS_EXPOSE_HEADERS = ['currency', 'X-Session-ID', 'cookie', ]
 CORS_ORIGIN_WHITELIST = [
