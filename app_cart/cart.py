@@ -1,5 +1,6 @@
+from django.core.cache import cache
+
 from core.serializers import ProductSerializer
-from engimovCaribe import settings
 
 
 class Wrapper(dict):
@@ -13,18 +14,7 @@ class Cart(object):
     def __init__(self, request=None):
         if request is not None:
             self.request = request
-            self.session = request.session
-            # self.session[settings.CART_SESSION_ID] = request.headers.get('X-Session-ID')
-
-            # cart = self.session.get(settings.CART_SESSION_ID)
-            # if not cart:  # or True:
-            #     # save an empty cart in the session
-            # cart = self.session[settings.CART_SESSION_ID] = {}
-            if not self.session.get(request.headers.get('X-Session-ID')):
-                self.session[request.headers.get('X-Session-ID')] = {}
-
-            cart = self.session[request.headers.get('X-Session-ID')]
-            self.cart = cart
+            self.session = request.headers.get('Cart-Id')
 
     def add(self, product, quantity):
         """
@@ -33,102 +23,68 @@ class Cart(object):
         q = int(quantity)
         stock = int(product.stock)
         prod = ProductSerializer(product).data
+        cart = cache.get(self.session) or {}
 
-        if str(product.pk) not in self.cart.keys():
+        if str(product.pk) not in cart:
             prod.update({'quantity': q if q <= stock else stock})
 
-            self.cart[str(product.pk)] = {
-                "pk": str(product.pk),
-                'product': prod,
-            }
-            # print(self.cart[str(product.pk)])
+            cart[str(product.pk)] = prod
         else:
-            amount = int(self.cart[str(product.pk)]['product']['quantity'])
-            self.cart[str(product.pk)]['product']['quantity'] = amount + q if (amount + q) <= stock else stock
-            # print(self.cart[str(product.pk)])
-        self.save()
+            amount = int(cache.get(self.session)['quantity'])
+            cart[str(product.pk)]['quantity'] = amount + q if (amount + q) <= stock else stock
+        self.save(cart)
 
-    def subtract(self, product, quantity=1):
-        """
-        Subtract a product from the cart or update its quantity.
-        """
-        if str(product.pk) in self.cart.keys():
-            amount = int(self.get_product(product.pk)['quantity'])
-            new_quantity = max(amount - int(quantity), 0)
-            if new_quantity == 0:
-                del self.cart[str(product.pk)]
-            else:
-                self.cart[str(product.pk)]['product']['quantity'] = new_quantity
-            self.save()
-
-    def save(self):
-        # update the session cart
-        # self.session[settings.CART_SESSION_ID] = self.cart
-        # mark the session as "modified" to make sure it is saved
-        self.session.modified = True
+    def save(self, cart):
+        cache.set(self.session, cart, 60 * 60 * 4)
 
     # Devuelve el objeto en el formato que está en el carro
     def get(self, pk):
-        if self.session[settings.CART_SESSION_ID].get(pk):
-            return self.session[settings.CART_SESSION_ID][pk]
-        return None
-
-    def get_product(self, pk):
-        if self.cart.get(pk):
-            return self.cart[pk]['product']
-        return None
+        return cache.get(self.session)[str(pk)] if str(pk) in cache.get(self.session) else None
 
     def get_all(self):
-        # return list(self.session[settings.CART_SESSION_ID].values())
-        return list(self.cart.values())
-
-    def get_all_products(self):
-        return list(map(lambda e: e['product'], self.get_all()))
+        return list(cache.get(self.session).values()) if cache.get(self.session) else []
 
     def set(self, key, value):
-        self.cart[key] = value
-        self.save()
+        cache.get(self.session)[str(key)] = value
 
     def get_sum_of(self, key):
-        return sum(map(lambda x: float(x[key]), self.get_all_products()))
+        return sum(map(lambda x: float(x[key]), self.get_all()))
 
     def remove(self, product):
         """
         Remove a product from the cart.
         """
-        if str(product.pk) in self.cart.keys():
-            del self.cart[str(product.pk)]
-            self.save()
-
-    def decrement(self, product, quantity):
-        if str(product.pk) in self.session[settings.CART_SESSION_ID]:
-            new_quantity = self.cart[str(product.pk)]['product']['quantity'] - quantity
-            if new_quantity < 1:
-                del self.cart[str(product.pk)]
-            else:
-                self.cart[str(product.pk)]['product']['quantity'] = new_quantity
-        self.save()
+        cart = cache.get(self.session)
+        if str(product.pk) in cart:
+            del cart[str(product.pk)]
+            cache.set(self.session, cart)
 
     def update_quantity(self, product, quantity):
         q = int(quantity)
         stock = int(product.stock)
-        if str(product.pk) in self.session[settings.CART_SESSION_ID]:
-            if q == 0:
+        cart = cache.get(self.session) or {}
+
+        if str(product.pk) in cart:
+            if q <= 0:
                 self.remove(product)
                 return
             if q >= stock:
                 new_quantity = stock
             else:
                 new_quantity = q
-            self.cart[str(product.pk)]['product']['quantity'] = new_quantity
-            self.save()
+            cart[str(product.pk)]['quantity'] = new_quantity
+            self.save(cart)
         else:
             self.add(product, quantity)
 
     def clear(self):
         # empty cart
-        self.session[settings.CART_SESSION_ID] = {}
-        self.session.modified = True
+        cart = cache.get(self.session) or {}
+        if cart:
+            for product_id in list(cart.keys()):
+                del cart[str(product_id)]
+            cache.set(self.session, cart)
 
     def get_total(self):
-        return sum(map(lambda x: float(x['price']) * int(x['quantity']), self.get_all_products()))
+        return sum(map(lambda x: float(x['price']) * int(x['quantity']), self.get_all())) if cache.get(
+            self.session) else 0

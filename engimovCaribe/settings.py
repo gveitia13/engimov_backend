@@ -32,16 +32,16 @@ CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOW_CREDENTIALS = True
 from corsheaders.defaults import default_headers
 
-CORS_ALLOW_HEADERS = [*default_headers, 'currency', 'X-Session-ID', 'cookie', 'Access-Control-Allow-Origin',
-                      'accept-encoding', 'dnt', 'origin']
+CORS_ALLOW_HEADERS = [*default_headers, 'currency', 'cookie', 'Access-Control-Allow-Origin',
+                      'accept-encoding', 'dnt', 'origin', 'Cart-Id']
 
-# CORS_ALLOWED_ORIGINS = CORS_ALLOW_HEADERS
-CORS_EXPOSE_HEADERS = ['currency', 'X-Session-ID', 'cookie', ]
+CORS_EXPOSE_HEADERS = ['currency', 'cookie', 'Cart-Id']
 CORS_ORIGIN_WHITELIST = [
     'http://localhost:4200',  # Dominio de tu aplicación Angular
+    'https://*.vercel.app',
 ]
 CSRF_TRUSTED_ORIGINS = ['https://*.127.0.0.1', 'https://*.render.com', 'https://*.onrender.com',
-                        'http://localhost:4200']
+                        'http://localhost:4200', 'https://*.vercel.app']
 CORS_ALLOW_PRIVATE_NETWORK = True
 
 # Application definition

@@ -36,7 +36,7 @@ class Product(models.Model):
     price = models.FloatField(verbose_name=_('Precio'))
     visible = models.BooleanField(verbose_name=_('Visibilidad'))
     is_sale = models.BooleanField(_('En venta'), default=False)
-    stock = models.IntegerField(verbose_name='Cantidad de inventario', default=1)
+    stock = models.PositiveSmallIntegerField(verbose_name='Cantidad de inventario', default=1)
     date_updated = models.DateTimeField(auto_now=True, null=True, blank=True)
 
     def __str__(self):
