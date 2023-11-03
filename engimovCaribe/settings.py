@@ -54,6 +54,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'sslserver',
     'core.apps.CoreConfig',
     'sections.apps.SectionsConfig',
     'app_cart',
