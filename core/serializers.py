@@ -18,12 +18,13 @@ class WorkCategorySerializer(serializers.ModelSerializer):
 class ProductSerializer(serializers.ModelSerializer):
     short_description = serializers.SerializerMethodField()
     quantity = serializers.SerializerMethodField()
+    in_cart = serializers.SerializerMethodField()
 
     class Meta:
         model = Product
         fields = (
             'sku', 'category', 'name', 'description', 'image', 'price', 'visible', 'stock', 'short_description',
-            'quantity')
+            'quantity', 'in_cart')
         depth = 1
 
     def get_short_description(self, obj):
@@ -31,6 +32,9 @@ class ProductSerializer(serializers.ModelSerializer):
 
     def get_quantity(self, obj):
         return 1
+
+    def get_in_cart(self, obj):
+        return False
 
 
 class TestimonialSerializer(serializers.ModelSerializer):

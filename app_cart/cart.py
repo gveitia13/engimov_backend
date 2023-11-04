@@ -24,10 +24,9 @@ class Cart(object):
         stock = int(product.stock)
         prod = ProductSerializer(product).data
         cart = cache.get(self.session) or {}
-
         if str(product.pk) not in cart:
             prod.update({'quantity': q if q <= stock else stock})
-
+            prod.update({'in_cart': True})
             cart[str(product.pk)] = prod
         else:
             amount = int(cache.get(self.session)['quantity'])
@@ -63,7 +62,7 @@ class Cart(object):
         q = int(quantity)
         stock = int(product.stock)
         cart = cache.get(self.session) or {}
-
+        print(product)
         if str(product.pk) in cart:
             if q <= 0:
                 self.remove(product)

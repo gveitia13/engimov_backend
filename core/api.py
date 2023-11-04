@@ -1,6 +1,7 @@
+from rest_framework import status
 from rest_framework import viewsets, pagination
-from rest_framework.pagination import PageNumberPagination
-from rest_framework.permissions import AllowAny, IsAdminUser
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from .models import ProductCategory, WorkCategory, Product, Work, Testimonial, EnterpriseData, JobOffer, JobOfferPool, \
@@ -8,9 +9,6 @@ from .models import ProductCategory, WorkCategory, Product, Work, Testimonial, E
 from .serializers import ProductCategorySerializer, WorkCategorySerializer, ProductSerializer, WorkSerializer, \
     TestimonialSerializer, EnterpriseDataSerializer, ContactSerializer, JobOfferSerializer, JobOfferPoolSerializer, \
     CommercialJobOfferSerializer, TermsOfUseSerializer, PrivacyPolicySerializer
-from rest_framework import status
-from rest_framework.decorators import api_view
-from rest_framework.response import Response
 
 
 class StandardResultsSetPagination(pagination.PageNumberPagination):
