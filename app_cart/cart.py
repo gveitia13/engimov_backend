@@ -62,7 +62,6 @@ class Cart(object):
         q = int(quantity)
         stock = int(product.stock)
         cart = cache.get(self.session) or {}
-        print(product)
         if str(product.pk) in cart:
             if q <= 0:
                 self.remove(product)

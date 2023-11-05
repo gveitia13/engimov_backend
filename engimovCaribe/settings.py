@@ -292,3 +292,12 @@ CKEDITOR_CONFIGS = {
 }
 CART_SESSION_ID = "cart"
 SESSION_COOKIE_AGE = 7200
+
+TPP_CLIENT_ID = 'f12538a0aa85242baa9f137380ab1926'
+TPP_CLIENT_SECRET = '323b25d45c305000cec8c8a70afc4cda'
+TPP_CLIENT_EMAIL = 'gaia.habana2021@gmail.com'
+TPP_CLIENT_PASSWORD = 'Gaia2021'
+TPP_URL = "www.tropipay.com"
+TPP_SUCCESS_URL = 'https://gaia-mercado.com/tropipay/success/'
+TPP_FAILED_URL = 'https://gaia-mercado.com/tropipay/fails/'
+TPP_NOTIFICACION_URL = 'https://gaia-mercado.com/tropipay/verificar/'

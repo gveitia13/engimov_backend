@@ -129,7 +129,6 @@ class CommercialJobOffer(models.Model):
 class Testimonial(models.Model):
     work = models.ForeignKey(Work, on_delete=models.CASCADE, verbose_name=_('Trabajos'))
     name = models.CharField(max_length=255, verbose_name=_('Nombre'))
-    link = models.URLField(verbose_name=_('Link'), null=True, blank=True, help_text=_('Opcional'))
     testimonial = models.TextField(verbose_name=_('Testimonios'))
 
     def __str__(self):

@@ -40,7 +40,7 @@ class ProductSerializer(serializers.ModelSerializer):
 class TestimonialSerializer(serializers.ModelSerializer):
     class Meta:
         model = Testimonial
-        fields = ('id', 'work', 'name', 'link', 'testimonial')
+        fields = ('id', 'work', 'name', 'testimonial')
 
 
 class WorkSerializer(serializers.ModelSerializer):

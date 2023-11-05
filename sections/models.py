@@ -77,3 +77,17 @@ class TermsAndPrivacyPolice(SectionBaseModel):
     class Meta:
         verbose_name = 'Términos de Uso y Política de Privacidad'
         verbose_name_plural = verbose_name
+
+
+class TropipayConfig(SingletonModel):
+    tpp_client_id = models.CharField(max_length=255, null=True, blank=True)
+    tpp_client_secret = models.CharField(max_length=255, null=True, blank=True)
+    tpp_client_email = models.EmailField(null=True, blank=True)
+    tpp_client_password = models.CharField(max_length=255, null=True, blank=True)
+    tpp_url = models.URLField(null=True, blank=True, default='www.tropipay.com')
+    tpp_success_url = models.URLField(null=True, blank=True)
+    tpp_failed_url = models.URLField(null=True, blank=True)
+    tpp_notification_url = models.URLField(null=True, blank=True)
+
+    class Meta:
+        verbose_name = 'Configuración de Tropipay'
