@@ -5,8 +5,8 @@ Preparing stage
 ----------------
 1. Install `docker <https://docs.docker.com/engine/install/>`_
 
-Deployment with docker-compose
--------------------------------
+Deployment with docker-compose (Recommended)
+---------------------------------------------
 
 .. code-block:: bash
 
