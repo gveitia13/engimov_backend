@@ -172,7 +172,7 @@ WSGI_APPLICATION = 'engimovCaribe.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'NAME': BASE_DIR / 'database/db.sqlite3',
     }
 }
 
@@ -197,7 +197,7 @@ AUTH_PASSWORD_VALIDATORS = [
 CACHES = {
     'default': {
         'BACKEND': 'django.core.cache.backends.memcached.PyMemcacheCache',
-        'LOCATION': '127.0.0.1:11211',
+        'LOCATION': 'memchached:11211', # We are using here the capabilities of docker dns, when using docker compose up the service name it resolves to is docker ip
     },
     'local': {
         'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',

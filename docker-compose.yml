@@ -1,0 +1,57 @@
+version: '3.6'
+
+services:
+  memcached:
+    deploy:
+      labels:
+        - "traefik.enable=false"
+
+    image: memcached
+    #ports: The port isnt needed as is already exposed in the default network
+    #  - 11211:11211
+    networks:
+      - default
+  backend:
+    deploy: 
+      replicas: 1  # This is not thought to be used in docker swarm because the volumes are not cluster wide available
+      placement:
+        constraints:
+          - 'node.hostname==${HOSTNAME}'
+      labels:
+        - "traefik.enable=true"
+        - "traefik.http.routers.engimov.entrypoints=web, websecure"
+        - "traefik.http.routers.engimov.rule=Host(`engimov.cloudfood.uk`)"
+        - "traefik.http.services.engimov.loadbalancer.server.port=8000"
+    build: ./ # Uses the local Dockerfile to build our image in runtime, this is not valid in swarm mode
+    image: engimov-backend # run docker compose build first if this is needed 
+    depends_on:
+      - memcached
+    networks: # This is to bind the services together, isnt really needed because there is already a network bind under the hood, but used anyway for verbosity
+      - default
+      - traefik
+    volumes:
+      - database:/app/database/
+      - media:/app/media/
+  frontend:
+    deploy:
+      labels:
+        - "traefik.enable=false"
+    image: nginx
+    depends_on:
+      - backend
+    networks:
+      - default
+      - traefik
+
+networks:
+  default:
+    # driver: overlay # This is not needed unless we are using the swarm mode
+  traefik:
+    name: traefik
+    external: true
+
+volumes:
+  media:
+    driver: local
+  database:
+    driver: local
