@@ -42,7 +42,7 @@ class WorkAdmin(admin.ModelAdmin):
     list_display = ('name', 'category', 'get_image')
     list_filter = ('category',)
     search_fields = ('name',)
-    inlines = [TestimonialInline]
+    # inlines = [TestimonialInline]
 
 
 class EnterpriseDataAdmin(SingletonModelAdmin):
