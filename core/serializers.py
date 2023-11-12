@@ -55,11 +55,12 @@ class WorkSerializer(serializers.ModelSerializer):
         depth = 1
 
     def get_name(self, obj):
-        return {
-            'es': obj.name,
-            'en': obj.name_en,
-            'pt': obj.name_pt
-        }
+        # return {
+        #     'es': obj.name,
+        #     'en': obj.name_en,
+        #     'pt': obj.name_pt
+        # }
+        return obj.name
 
 
 class EnterpriseAditionalContactSerializer(serializers.ModelSerializer):

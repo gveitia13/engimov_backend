@@ -7,7 +7,7 @@ from .api import IndexSectionViewSet, WorkWithUsSectionViewSet, ProductsPortfoli
 router = routers.DefaultRouter()
 router.register('index', IndexSectionViewSet)
 router.register('about', AboutUsSectionViewSet)
-router.register('products_portfolio', ProductsPortfolioSectionViewSet)
+# router.register('products_portfolio', ProductsPortfolioSectionViewSet)
 router.register('works_portfolio', WorksPortfolioSectionViewSet)
 router.register('work_with_us', WorkWithUsSectionViewSet)
 router.register('sell', SellProductsSectionViewSet)

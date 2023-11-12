@@ -2,6 +2,8 @@ from django.db import models
 from django.utils.translation import gettext_lazy as _
 from solo.models import SingletonModel
 
+from engimovCaribe.utils import traducir_por_defecto
+
 
 # Create your models here.
 class SectionBaseModel(SingletonModel):
@@ -15,12 +17,26 @@ class SectionBaseModel(SingletonModel):
     title_en = models.CharField(max_length=255, verbose_name=_('Título Inglés'), null=True, blank=True,
                                 help_text='Dejar este campo vacío hará que el sistema proponga una traducción '
                                           'automática. La traducción automática puede ser modificada.', )
-    subtitle_pt = models.CharField(max_length=255, verbose_name=_('Subtítulo Portugués'), null=True, blank=True,
+    subtitle_pt = models.TextField(_('Subtítulo Portugués'), null=True, blank=True,
                                    help_text='Dejar este campo vacío hará que el sistema proponga una traducción '
                                              'automática. La traducción automática puede ser modificada.', )
-    subtitle_en = models.CharField(max_length=255, verbose_name=_('Sutítulo Inglés'), null=True, blank=True,
+    subtitle_en = models.TextField(_('Sutítulo Inglés'), null=True, blank=True,
                                    help_text='Dejar este campo vacío hará que el sistema proponga una traducción '
                                              'automática. La traducción automática puede ser modificada.', )
+
+    def save(self, *args, **kwargs):
+        try:
+            if not self.title_en:
+                self.title_en = traducir_por_defecto(self.title, 'en')
+            if not self.title_pt:
+                self.title_pt = traducir_por_defecto(self.title, 'pt')
+            if not self.subtitle_en:
+                self.subtitle_en = traducir_por_defecto(self.subtitle, 'en')
+            if not self.subtitle_pt:
+                self.subtitle_pt = traducir_por_defecto(self.subtitle, 'pt')
+        except:
+            pass
+        super().save()
 
     def __str__(self):
         return '{}'.format(self.title)

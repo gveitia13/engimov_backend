@@ -198,6 +198,7 @@ CACHES = {
     'default': {
         'BACKEND': 'django.core.cache.backends.memcached.PyMemcacheCache',
         'LOCATION': 'memchached:11211',
+        # 'LOCATION': '127.0.0.1:11211',
         # We are using here the capabilities of docker dns, when using docker compose up the service name it resolves to is docker ip
     },
     'local': {

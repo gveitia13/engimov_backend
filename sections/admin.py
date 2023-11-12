@@ -14,6 +14,10 @@ class AboutUsSectionPerksInline(admin.StackedInline):
 class BaseSectionAdmin(SingletonModelAdmin):
     list_display = ('title', 'subtitle')
     search_fields = ('title', 'subtitle')
+    fieldsets = [
+        ('Datos principales', {'fields': ('title', 'subtitle', 'image')}),
+        ('Datos a traducir', {'fields': ('title_pt', 'subtitle_pt', 'title_en', 'subtitle_en')}),
+    ]
 
 
 class AboutUsSectionAdmin(BaseSectionAdmin):
@@ -26,8 +30,8 @@ class TropipayConfigAdmin(SingletonModelAdmin):
 
 
 admin.site.register(IndexSection, BaseSectionAdmin)
-admin.site.register(AboutUsSection, AboutUsSectionAdmin)
-admin.site.register(ProductsPortfolioSection, BaseSectionAdmin)
+admin.site.register(AboutUsSection, BaseSectionAdmin)
+# admin.site.register(ProductsPortfolioSection, BaseSectionAdmin)
 admin.site.register(WorksPortfolioSection, BaseSectionAdmin)
 admin.site.register(WorkWithUsSection, BaseSectionAdmin)
 admin.site.register(ContactUsSection, BaseSectionAdmin)
