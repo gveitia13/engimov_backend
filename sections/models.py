@@ -8,6 +8,19 @@ class SectionBaseModel(SingletonModel):
     title = models.CharField(max_length=255, verbose_name=_('Título'))
     subtitle = models.TextField(verbose_name=_('Subtítulo'))
     image = models.ImageField(upload_to='sections/', verbose_name=_('Imagen'))
+    # Traducciones
+    title_pt = models.CharField(max_length=255, verbose_name=_('Título Portugués'), null=True, blank=True,
+                                help_text='Dejar este campo vacío hará que el sistema proponga una traducción '
+                                          'automática. La traducción automática puede ser modificada.', )
+    title_en = models.CharField(max_length=255, verbose_name=_('Título Inglés'), null=True, blank=True,
+                                help_text='Dejar este campo vacío hará que el sistema proponga una traducción '
+                                          'automática. La traducción automática puede ser modificada.', )
+    subtitle_pt = models.CharField(max_length=255, verbose_name=_('Subtítulo Portugués'), null=True, blank=True,
+                                   help_text='Dejar este campo vacío hará que el sistema proponga una traducción '
+                                             'automática. La traducción automática puede ser modificada.', )
+    subtitle_en = models.CharField(max_length=255, verbose_name=_('Sutítulo Inglés'), null=True, blank=True,
+                                   help_text='Dejar este campo vacío hará que el sistema proponga una traducción '
+                                             'automática. La traducción automática puede ser modificada.', )
 
     def __str__(self):
         return '{}'.format(self.title)

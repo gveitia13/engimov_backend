@@ -4,6 +4,8 @@ from django.utils.translation import gettext_lazy as _
 from solo.models import SingletonModel
 from ckeditor.fields import RichTextField
 
+from engimovCaribe.utils import traducir_por_defecto
+
 
 class ProductCategory(models.Model):
     name = models.CharField(max_length=255, verbose_name=_('Nombre'))
@@ -53,6 +55,19 @@ class Work(models.Model):
     description = models.TextField(verbose_name=_('Descripción'))
     image = models.ImageField(upload_to='works/', verbose_name=_('Imagen'),
                               help_text='Poner imagen horizontal, relación aspecto 16:9 preferiblemente')
+    # Descripciones
+    name_pt = models.CharField(max_length=255, verbose_name=_('Nombre Portugués'), null=True, blank=True,
+                               help_text='Dejar este campo vacío hará que el sistema proponga una traducción '
+                                         'automática. La traducción automática puede ser modificada.', )
+    name_en = models.CharField(max_length=255, verbose_name=_('Nombre Inglés'), null=True, blank=True,
+                               help_text='Dejar este campo vacío hará que el sistema proponga una traducción '
+                                         'automática. La traducción automática puede ser modificada.', )
+    description_pt = models.TextField('Descripción Portugués', null=True, blank=True,
+                                      help_text='Dejar este campo vacío hará que el sistema proponga una traducción '
+                                                'automática. La traducción automática puede ser modificada.', )
+    description_en = models.TextField('Descripción Inglés', null=True, blank=True,
+                                      help_text='Dejar este campo vacío hará que el sistema proponga una traducción '
+                                                'automática. La traducción automática puede ser modificada.', )
 
     def __str__(self):
         return '{}'.format(self.name)
@@ -60,6 +75,17 @@ class Work(models.Model):
     class Meta:
         verbose_name = _('Trabajo')
         verbose_name_plural = _('Trabajos')
+
+    def save(self, *args, **kwargs):
+        try:
+            if not self.description_en:
+                self.description_en = traducir_por_defecto(self.description, 'en')
+            if not self.description_pt:
+                self.description_pt = traducir_por_defecto(self.description, 'pt')
+
+        except:
+            pass
+        super().save()
 
     def get_image(self):
         return mark_safe(f'<img src="{self.image.url}" class="img-fluid" width=65/>')

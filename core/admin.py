@@ -42,6 +42,10 @@ class WorkAdmin(admin.ModelAdmin):
     list_display = ('name', 'category', 'get_image')
     list_filter = ('category',)
     search_fields = ('name',)
+    fieldsets = [
+        ('Datos principales', {'fields': ('name', 'category', 'image', 'description')}),
+        ('Datos a traducir', {'fields': ('name_pt', 'name_en', 'description_pt', 'description_en')}),
+    ]
     # inlines = [TestimonialInline]
 
 

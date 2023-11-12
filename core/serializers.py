@@ -1,4 +1,6 @@
 from rest_framework import serializers
+
+from engimovCaribe.utils import traducir_por_defecto
 from .models import ProductCategory, WorkCategory, Product, Work, Testimonial, EnterpriseAditionalContact, \
     EnterpriseData, Contact, TermsOfUse, PrivacyPolicy, JobOffer, JobOfferPool, CommercialJobOffer
 
@@ -45,11 +47,19 @@ class TestimonialSerializer(serializers.ModelSerializer):
 
 class WorkSerializer(serializers.ModelSerializer):
     testimonials = TestimonialSerializer(many=True, read_only=True, source='testimonial_set')
+    name = serializers.SerializerMethodField()
 
     class Meta:
         model = Work
         fields = ('id', 'category', 'name', 'description', 'image', 'testimonials')
         depth = 1
+
+    def get_name(self, obj):
+        return {
+            'es': obj.name,
+            'en': obj.name_en,
+            'pt': obj.name_pt
+        }
 
 
 class EnterpriseAditionalContactSerializer(serializers.ModelSerializer):
