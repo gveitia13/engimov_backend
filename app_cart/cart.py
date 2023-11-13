@@ -38,6 +38,8 @@ class Cart(object):
 
     # Devuelve el objeto en el formato que está en el carro
     def get(self, pk):
+        if not pk:
+            return None
         return cache.get(self.session)[str(pk)] if str(pk) in cache.get(self.session) else None
 
     def get_all(self):
