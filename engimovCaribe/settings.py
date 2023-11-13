@@ -193,18 +193,40 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
-
+servers = os.environ['MEMCACHIER_SERVERS']
+username = os.environ['MEMCACHIER_USERNAME']
+password = os.environ['MEMCACHIER_PASSWORD']
 CACHES = {
     'default': {
-        'BACKEND': 'django.core.cache.backends.memcached.PyMemcacheCache',
-        # 'LOCATION': 'memchached:11211',
-        'LOCATION': '127.0.0.1:11211',
-        # We are using here the capabilities of docker dns, when using docker compose up the service name it resolves to is docker ip
-    },
-    'local': {
-        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
-    },
+        # Use django-bmemcached
+        'BACKEND': 'django_bmemcached.memcached.BMemcached',
+
+        # TIMEOUT is not the connection timeout! It's the default expiration
+        # timeout that should be applied to keys! Setting it to `None`
+        # disables expiration.
+        'TIMEOUT': None,
+
+        'LOCATION': servers,
+
+        'OPTIONS': {
+            'username': username,
+            'password': password,
+        }
+    }
 }
+
+# CACHES = {
+#     'default': {
+#         'BACKEND': 'django.core.cache.backends.memcached.PyMemcacheCache',
+#         # 'LOCATION': 'memchached:11211',
+#         'LOCATION': '127.0.0.1:11211',
+#         # We are using here the capabilities of docker dns, when using docker compose up the service name it resolves
+#         # to is docker ip
+#     },
+#     'local': {
+#         'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+#     },
+# }
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.1/topics/i18n/
