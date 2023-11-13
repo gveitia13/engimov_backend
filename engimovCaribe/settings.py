@@ -12,9 +12,15 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 import datetime
 import os
 from pathlib import Path
+from environ import environ
 
+# Initialise environment variables
+env = environ.Env()
+# environ.Env.read_env()
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
+# BASE_DIR = Path(__file__).resolve().parent.parent
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+environ.Env.read_env(os.path.join(BASE_DIR, ".env"))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
@@ -136,7 +142,7 @@ ROOT_URLCONF = 'engimovCaribe.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates']
+        'DIRS':  [os.path.join(BASE_DIR, 'templates')]
         ,
         'APP_DIRS': True,
         'OPTIONS': {
@@ -172,7 +178,8 @@ WSGI_APPLICATION = 'engimovCaribe.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'database/db.sqlite3',
+        # 'NAME': BASE_DIR / 'database/db.sqlite3',
+        'NAME':  os.path.join(BASE_DIR, 'database/db.sqlite3'),
     }
 }
 
@@ -193,9 +200,9 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
-servers = os.environ['MEMCACHIER_SERVERS']
-username = os.environ['MEMCACHIER_USERNAME']
-password = os.environ['MEMCACHIER_PASSWORD']
+servers = env('MEMCACHIER_SERVERS')
+username = env('MEMCACHIER_USERNAME')
+password = env('MEMCACHIER_PASSWORD')
 CACHES = {
     'default': {
         # Use django-bmemcached
@@ -234,7 +241,8 @@ CACHES = {
 # LANGUAGE_CODE = 'pt-br'
 # LANGUAGES = [('pt-br', 'Português'), ('es', 'Español')]
 LANGUAGE_CODE = 'es'
-LOCALE_PATHS = (str(BASE_DIR / 'locale'),)
+# LOCALE_PATHS = (str(BASE_DIR / 'locale'),)
+LOCALE_PATHS = [os.path.join(BASE_DIR, 'locale')]
 
 TIME_ZONE = 'America/Havana'
 
