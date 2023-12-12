@@ -36,6 +36,7 @@ class ProductAdmin(admin.ModelAdmin):
     search_fields = ('sku', 'name')
     list_editable = ('is_sale', 'visible')
     ordering = ('-visible', '-is_sale')
+    list_per_page = 10
 
 
 class WorkAdmin(admin.ModelAdmin):
@@ -44,7 +45,7 @@ class WorkAdmin(admin.ModelAdmin):
     search_fields = ('name',)
     fieldsets = [
         ('Datos principales', {'fields': ('name', 'category', 'image', 'description')}),
-        ('Datos a traducir', {'fields': ('name_pt','description_pt', 'name_en',  'description_en')}),
+        ('Datos a traducir', {'fields': ('name_pt', 'description_pt', 'name_en', 'description_en')}),
     ]
     # inlines = [TestimonialInline]
 

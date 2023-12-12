@@ -41,6 +41,12 @@ class Product(models.Model):
     stock = models.PositiveSmallIntegerField(verbose_name='Cantidad de inventario', default=1)
     date_updated = models.DateTimeField(auto_now=True, null=True, blank=True)
 
+    # def get_image(self):
+    #     return mark_safe(
+    #         f'<a href="{self.image.url}" target="_blank"><img href="{self.image.url}" height="55" width="55"></img></a>')
+    #
+    # get_image.short_description = 'Vista previa'
+
     def __str__(self):
         return '{}'.format(self.name)
 
