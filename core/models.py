@@ -1,3 +1,4 @@
+from django.core.validators import MinValueValidator
 from django.db import models
 from django.utils.safestring import mark_safe
 from django.utils.translation import gettext_lazy as _
@@ -30,22 +31,24 @@ class WorkCategory(models.Model):
 
 
 class Product(models.Model):
-    sku = models.CharField(unique=True, primary_key=True, max_length=255)
+    sku = models.CharField(unique=True, primary_key=True, max_length=255, help_text='Identificador único')
     category = models.ForeignKey(ProductCategory, on_delete=models.CASCADE, verbose_name=_('Categoría'))
     name = models.CharField(max_length=255, verbose_name=_('Nombre'))
     description = models.TextField(verbose_name=_('Descripción'))
     image = models.ImageField(upload_to='products/', verbose_name=_('Imagen'))
-    price = models.FloatField(verbose_name=_('Precio'))
+    price = models.FloatField(verbose_name=_('Precio'),
+                              validators=[MinValueValidator(0, 'Debe ser mayor que cero')])
     visible = models.BooleanField(verbose_name=_('Visibilidad'))
     is_sale = models.BooleanField(_('En venta'), default=False)
     stock = models.PositiveSmallIntegerField(verbose_name='Cantidad de inventario', default=1)
     date_updated = models.DateTimeField(auto_now=True, null=True, blank=True)
+    delivery_time = models.PositiveSmallIntegerField('Tiempo de entrega (días)', default=2)
 
-    # def get_image(self):
-    #     return mark_safe(
-    #         f'<a href="{self.image.url}" target="_blank"><img href="{self.image.url}" height="55" width="55"></img></a>')
-    #
-    # get_image.short_description = 'Vista previa'
+    # def save(self, *args, **kwargs):
+    #     if not self.sku:
+    #         # Generar un SKU aleatorio usando letras y dígitos
+    #         self.sku = ''.join(random.choices(string.ascii_uppercase + string.digits, k=10))
+    #     return super().save(*args, **kwargs)
 
     def __str__(self):
         return '{}'.format(self.name)
@@ -53,6 +56,31 @@ class Product(models.Model):
     class Meta:
         verbose_name = _('Producto')
         verbose_name_plural = _('Productos')
+
+
+class DeliveryPlace(models.Model):
+    name = models.CharField(max_length=255, verbose_name=_('Nombre'))
+    description = models.TextField('Descripción', null=True, blank=True)
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name = 'Lugar de entrega'
+        verbose_name_plural = 'Lugares de entrega'
+
+
+class DeliveryPrice(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    delivery_place = models.ForeignKey(DeliveryPlace, on_delete=models.CASCADE)
+    price = models.FloatField(verbose_name=_('Precio'), validators=[MinValueValidator(0, 'Debe ser mayor que cero')])
+
+    def __str__(self):
+        return self.price
+
+    class Meta:
+        verbose_name = 'Precio de entrega'
+        verbose_name_plural = 'Precios de entrega'
 
 
 class Work(models.Model):
@@ -190,6 +218,11 @@ class EnterpriseData(SingletonModel):
                                  help_text=_('Opcional'))
     doc_folleto_digital = models.FileField(_('Folleto digital'), null=True, blank=True, upload_to='doc/')
     doc_presentation = models.FileField(_('Carta de presentación'), null=True, blank=True, upload_to='doc/')
+    tropipay_impuesto = models.FloatField('Impuesto de Tropipay', default=3.45,
+                                          help_text='Porciento del total de la orden aumentado',
+                                          validators=[MinValueValidator(0, 'Debe ser mayor que cero')])
+    checkout_allowed = models.BooleanField(default=True, verbose_name='Permitir compras',
+                                           help_text='Permitir a los usuarios realizar compras')
 
     def __str__(self):
         return "{}".format(self.enterprise_name)

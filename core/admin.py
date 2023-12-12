@@ -1,6 +1,7 @@
 from django.contrib import admin
 from .models import ProductCategory, WorkCategory, Product, Work, Testimonial, EnterpriseData, \
-    EnterpriseAditionalContact, Contact, TermsOfUse, PrivacyPolicy, JobOffer, JobOfferPool, CommercialJobOffer
+    EnterpriseAditionalContact, Contact, TermsOfUse, PrivacyPolicy, JobOffer, JobOfferPool, CommercialJobOffer, \
+    DeliveryPlace, DeliveryPrice
 from solo.admin import SingletonModelAdmin
 from django.utils.translation import gettext_lazy as _
 
@@ -20,6 +21,11 @@ class EnterpriseAditionalContactInLine(admin.TabularInline):
     extra = 0
 
 
+class DeliveryPriceInLine(admin.TabularInline):
+    model = DeliveryPrice
+    extra = 0
+
+
 class ProductCategoryAdmin(admin.ModelAdmin):
     list_display = ('name',)
     search_fields = ('name',)
@@ -36,7 +42,20 @@ class ProductAdmin(admin.ModelAdmin):
     search_fields = ('sku', 'name')
     list_editable = ('is_sale', 'visible')
     ordering = ('-visible', '-is_sale')
-    list_per_page = 10
+    list_per_page = 15
+    fieldsets = [
+        ('General', {
+            'fields': [
+                'sku', 'name', 'category', 'price', 'description', 'image'
+            ],
+        }),
+        ('Opciones', {
+            'fields': [
+                'is_sale', 'visible', 'delivery_time', 'stock'
+            ],
+        })
+    ]
+    inlines = [DeliveryPriceInLine]
 
 
 class WorkAdmin(admin.ModelAdmin):
@@ -67,18 +86,6 @@ class ContactAdmin(admin.ModelAdmin):
     ordering = ('is_checked',)
 
 
-# @admin.register(TermsOfUse)
-# class TermsOfUseAdmin(admin.ModelAdmin):
-#     list_display = ('version', 'effective_date')
-#     search_fields = ('version',)
-#
-#
-# @admin.register(PrivacyPolicy)
-# class PrivacyPolicyAdmin(admin.ModelAdmin):
-#     list_display = ('version', 'effective_date')
-#     search_fields = ('version',)
-
-
 class JobOfferAdmin(admin.ModelAdmin):
     list_display = ('name', 'get_description', 'is_active')
     list_editable = ('is_active',)
@@ -101,6 +108,7 @@ admin.site.register(JobOfferPool, JobOfferPoolAdmin)
 admin.site.register(JobOffer, JobOfferAdmin)
 admin.site.register(ProductCategory, ProductCategoryAdmin)
 admin.site.register(WorkCategory, WorkCategoryAdmin)
+admin.site.register(DeliveryPlace, WorkCategoryAdmin)
 admin.site.register(Product, ProductAdmin)
 admin.site.register(Work, WorkAdmin)
 admin.site.register(EnterpriseData, EnterpriseDataAdmin)
