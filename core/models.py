@@ -30,6 +30,18 @@ class WorkCategory(models.Model):
         verbose_name_plural = _('Categorías de trabajos')
 
 
+class DeliveryPlace(models.Model):
+    name = models.CharField(max_length=255, verbose_name=_('Nombre'))
+    description = models.TextField('Descripción', null=True, blank=True)
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name = 'Lugar de entrega'
+        verbose_name_plural = 'Lugares de entrega'
+
+
 class Product(models.Model):
     sku = models.CharField(unique=True, primary_key=True, max_length=255, help_text='Identificador único')
     category = models.ForeignKey(ProductCategory, on_delete=models.CASCADE, verbose_name=_('Categoría'))
@@ -43,6 +55,7 @@ class Product(models.Model):
     stock = models.PositiveSmallIntegerField(verbose_name='Cantidad de inventario', default=1)
     date_updated = models.DateTimeField(auto_now=True, null=True, blank=True)
     delivery_time = models.PositiveSmallIntegerField('Tiempo de entrega (días)', default=2)
+    # delivery_prices = models.ManyToManyField(DeliveryPlace, through='DeliveryPrice')
 
     # def save(self, *args, **kwargs):
     #     if not self.sku:
@@ -56,18 +69,6 @@ class Product(models.Model):
     class Meta:
         verbose_name = _('Producto')
         verbose_name_plural = _('Productos')
-
-
-class DeliveryPlace(models.Model):
-    name = models.CharField(max_length=255, verbose_name=_('Nombre'))
-    description = models.TextField('Descripción', null=True, blank=True)
-
-    def __str__(self):
-        return self.name
-
-    class Meta:
-        verbose_name = 'Lugar de entrega'
-        verbose_name_plural = 'Lugares de entrega'
 
 
 class DeliveryPrice(models.Model):
