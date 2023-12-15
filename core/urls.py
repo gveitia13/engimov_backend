@@ -4,7 +4,7 @@ from rest_framework import routers
 from .api import ProductCategoryViewSet, WorkCategoryViewSet, ProductViewSet, WorkViewSet, TestimonialViewSet, \
     EnterpriseDataViewSet, create_contact, SearchPreviewView, SearchView, CountView, ProductInSaleCategoryViewSet, \
     ProductSaleViewSet, JobOfferViewSet, JobOfferPoolViewSet, CommercialJobOfferViewSet, TermsOfUseViewSet, \
-    PrivacyPolicyViewSet
+    PrivacyPolicyViewSet, DeliveryPriceViewSet, DeliveryPlaceViewSet
 
 router = routers.DefaultRouter()
 router.register('productcategories', ProductCategoryViewSet)
@@ -20,6 +20,8 @@ router.register('job_offers_pool', JobOfferPoolViewSet)
 router.register('commercial_job_offers', CommercialJobOfferViewSet)
 router.register('terms', TermsOfUseViewSet)
 router.register('privacy', PrivacyPolicyViewSet)
+router.register('delivery_places', DeliveryPlaceViewSet)
+router.register('delivery_prices', DeliveryPriceViewSet)
 
 urlpatterns = [
     path('core/', include(router.urls)),

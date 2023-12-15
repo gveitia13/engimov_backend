@@ -39,7 +39,7 @@ class WorkCategoryAdmin(admin.ModelAdmin):
 class ProductAdmin(admin.ModelAdmin):
     list_display = ('sku', 'name', 'category', 'price', 'is_sale', 'visible')
     list_filter = ('category', 'visible', 'is_sale')
-    search_fields = ('sku', 'name')
+    search_fields = ( 'name',)
     list_editable = ('is_sale', 'visible')
     ordering = ('-visible', '-is_sale')
     list_per_page = 15
@@ -75,6 +75,7 @@ class EnterpriseDataAdmin(SingletonModelAdmin):
         (_('Datos principales'), {'fields': ('enterprise_name', 'email', 'location', 'tel', 'city')}),
         (_('Documentos'), {'fields': ('doc_folleto_digital', 'doc_presentation',)}),
         (_('Redes sociales'), {'fields': ('facebook', 'twitter', 'youtube', 'instagram',)}),
+        (_('Otras Opciones'), {'fields': ('tropipay_impuesto', 'checkout_allowed',)}),
     ]
 
 
@@ -112,3 +113,4 @@ admin.site.register(DeliveryPlace, WorkCategoryAdmin)
 admin.site.register(Product, ProductAdmin)
 admin.site.register(Work, WorkAdmin)
 admin.site.register(EnterpriseData, EnterpriseDataAdmin)
+admin.site.register(DeliveryPrice)

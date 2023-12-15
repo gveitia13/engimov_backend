@@ -2,7 +2,8 @@ from rest_framework import serializers
 
 from engimovCaribe.utils import traducir_por_defecto
 from .models import ProductCategory, WorkCategory, Product, Work, Testimonial, EnterpriseAditionalContact, \
-    EnterpriseData, Contact, TermsOfUse, PrivacyPolicy, JobOffer, JobOfferPool, CommercialJobOffer
+    EnterpriseData, Contact, TermsOfUse, PrivacyPolicy, JobOffer, JobOfferPool, CommercialJobOffer, DeliveryPrice, \
+    DeliveryPlace
 
 
 class ProductCategorySerializer(serializers.ModelSerializer):
@@ -17,16 +18,36 @@ class WorkCategorySerializer(serializers.ModelSerializer):
         fields = ('id', 'name')
 
 
+class DeliveryPlaceSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = DeliveryPlace
+        fields = '__all__'
+
+
+class DeliveryPriceSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = DeliveryPrice
+        fields = '__all__'
+
+
+class DeliveryPriceSetSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = DeliveryPrice
+        fields = ['price', 'delivery_place']
+        depth = 1
+
+
 class ProductSerializer(serializers.ModelSerializer):
     short_description = serializers.SerializerMethodField()
     quantity = serializers.SerializerMethodField()
     in_cart = serializers.SerializerMethodField()
+    deliveryprice_set = DeliveryPriceSetSerializer(many=True)
 
     class Meta:
         model = Product
         fields = (
             'sku', 'category', 'name', 'description', 'image', 'price', 'visible', 'stock', 'short_description',
-            'quantity', 'in_cart')
+            'quantity', 'in_cart', 'delivery_time', 'deliveryprice_set')
         depth = 1
 
     def get_short_description(self, obj):

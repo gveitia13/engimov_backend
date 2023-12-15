@@ -1,3 +1,4 @@
+import uuid as uuid
 from rest_framework import status
 from rest_framework import viewsets, pagination
 from rest_framework.decorators import api_view
@@ -5,10 +6,11 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from .models import ProductCategory, WorkCategory, Product, Work, Testimonial, EnterpriseData, JobOffer, JobOfferPool, \
-    CommercialJobOffer, TermsOfUse, PrivacyPolicy
+    CommercialJobOffer, TermsOfUse, PrivacyPolicy, DeliveryPlace, DeliveryPrice
 from .serializers import ProductCategorySerializer, WorkCategorySerializer, ProductSerializer, WorkSerializer, \
     TestimonialSerializer, EnterpriseDataSerializer, ContactSerializer, JobOfferSerializer, JobOfferPoolSerializer, \
-    CommercialJobOfferSerializer, TermsOfUseSerializer, PrivacyPolicySerializer
+    CommercialJobOfferSerializer, TermsOfUseSerializer, PrivacyPolicySerializer, DeliveryPlaceSerializer, \
+    DeliveryPriceSerializer
 
 
 class StandardResultsSetPagination(pagination.PageNumberPagination):
@@ -96,6 +98,12 @@ class WorkViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Work.objects.order_by('-id')
     serializer_class = WorkSerializer
     pagination_class = StandardResultsSetPagination
+
+    def get_queryset(self):
+        # for p in Product.objects.all():
+        #     p.sku = uuid.uuid4
+        #     p.save()
+        return super().get_queryset()
 
 
 class TestimonialViewSet(viewsets.ReadOnlyModelViewSet):
@@ -237,3 +245,13 @@ class TermsOfUseViewSet(viewsets.ReadOnlyModelViewSet):
 class PrivacyPolicyViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = PrivacyPolicy.objects.all()
     serializer_class = PrivacyPolicySerializer
+
+
+class DeliveryPlaceViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = DeliveryPlace.objects.all()
+    serializer_class = DeliveryPlaceSerializer
+
+
+class DeliveryPriceViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = DeliveryPrice.objects.all()
+    serializer_class = DeliveryPriceSerializer

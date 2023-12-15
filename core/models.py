@@ -1,5 +1,9 @@
+import uuid as uuid
+
 from django.core.validators import MinValueValidator
 from django.db import models
+from django.forms import model_to_dict
+from django.urls import reverse_lazy
 from django.utils.safestring import mark_safe
 from django.utils.translation import gettext_lazy as _
 from solo.models import SingletonModel
@@ -43,7 +47,10 @@ class DeliveryPlace(models.Model):
 
 
 class Product(models.Model):
-    sku = models.CharField(unique=True, primary_key=True, max_length=255, help_text='Identificador único')
+    sku = models.CharField(unique=True, primary_key=True, max_length=255, default=uuid.uuid4,
+                           help_text='Identificador único', )
+    # sku = models.UUIDField(verbose_name='ID', primary_key=True, default=uuid.uuid4, editable=False,
+    #                        help_text='Identificador único')
     category = models.ForeignKey(ProductCategory, on_delete=models.CASCADE, verbose_name=_('Categoría'))
     name = models.CharField(max_length=255, verbose_name=_('Nombre'))
     description = models.TextField(verbose_name=_('Descripción'))
@@ -55,6 +62,7 @@ class Product(models.Model):
     stock = models.PositiveSmallIntegerField(verbose_name='Cantidad de inventario', default=1)
     date_updated = models.DateTimeField(auto_now=True, null=True, blank=True)
     delivery_time = models.PositiveSmallIntegerField('Tiempo de entrega (días)', default=2)
+
     # delivery_prices = models.ManyToManyField(DeliveryPlace, through='DeliveryPrice')
 
     # def save(self, *args, **kwargs):
@@ -72,12 +80,12 @@ class Product(models.Model):
 
 
 class DeliveryPrice(models.Model):
-    product = models.ForeignKey(Product, on_delete=models.CASCADE)
-    delivery_place = models.ForeignKey(DeliveryPlace, on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, verbose_name='Producto')
+    delivery_place = models.ForeignKey(DeliveryPlace, on_delete=models.CASCADE, verbose_name='Lugar de entrega')
     price = models.FloatField(verbose_name=_('Precio'), validators=[MinValueValidator(0, 'Debe ser mayor que cero')])
 
     def __str__(self):
-        return self.price
+        return f'{self.delivery_place} - {self.price} USD'
 
     class Meta:
         verbose_name = 'Precio de entrega'
@@ -292,3 +300,85 @@ class PrivacyPolicy(SingletonModel):
     class Meta:
         verbose_name = _('Política de privacidad')
         verbose_name_plural = _('Políticas de privacidad')
+
+
+class Orden(models.Model):
+    link_de_pago = models.CharField(max_length=500, null=True, blank=True)
+    total = models.FloatField(default=0, verbose_name='Importe total')
+    precio_envio = models.FloatField(default=0, verbose_name='Precio de envío')
+    # moneda = models.CharField(max_length=255, default='Euro')
+    uuid = models.UUIDField(verbose_name='ID', primary_key=True, default=uuid.uuid4, editable=False)
+    status = models.CharField('Estado', choices=(
+        ('1', 'Completada'),
+        ('2', 'Pendiente'),
+        ('3', 'Cancelada'),
+    ), max_length=10, default='2')
+    date_created = models.DateTimeField('Fecha', auto_now_add=True, )
+    # Campos del form
+    tiempo_de_entrega = models.PositiveIntegerField('Tiempo de entrega máximo')
+    nombre = models.CharField('Nombre(s)', max_length=200)
+    apellidos = models.CharField('Apellidos', max_length=200)
+    # telefono_comprador = models.CharField('Teléfono del comprador', max_length=200)
+    correo = models.EmailField('Correo del comprador')
+    detalles_direccion = models.TextField('Detalles de dirección', null=True, blank=True)
+
+    def __str__(self):
+        return '{}'.format(str(self.uuid))
+
+    def get_total(self):
+        return '{:.2f}'.format(self.total)
+
+    def get_componente(self):
+        return mark_safe(''.join(['•' + i.__str__() + '<br>' for i in self.componente_orden.all()]))
+
+    def get_cancel_link(self):
+        if self.status != '3':
+            return mark_safe(
+                f'<a href="{reverse_lazy("cancelar", kwargs={"pk": self.pk})}" class="btn btn-danger rounded-pill '
+                f'">Cancelar<a/>')
+        else:
+            return ''
+
+    get_total.short_description = 'Importe total'
+    get_cancel_link.short_description = 'Opciones'
+    get_componente.short_description = 'Componentes'
+
+    class Meta:
+        verbose_name = 'Orden'
+        verbose_name_plural = 'Ordenes'
+        ordering = ('-date_created', '-status',)
+
+    def toJSON(self):
+        item = model_to_dict(self)
+        item['date_created'] = self.date_created.strftime('%d-%m-%Y')
+        item['uuid'] = str(self.uuid)
+        item['componentes'] = [i.toJSON() for i in self.componente_orden.all()]
+        return item
+
+
+class ComponenteOrden(models.Model):
+    producto = models.ForeignKey(Product, on_delete=models.SET_NULL, null=True, blank=True,
+                                 related_name='componente_producto')
+    respaldo = models.FloatField()
+    orden = models.ForeignKey(Orden, on_delete=models.CASCADE, related_name='componente_orden')
+    cantidad = models.IntegerField()
+
+    def __str__(self):
+        try:
+            return '{}x {} - {} {}'.format(self.cantidad, self.producto.name, '{:.2f}'.format(self.respaldo),
+                                           'USD')
+        except:
+            return '{}x {} - {} {}'.format(self.cantidad, "ERROR", '{:.2f}'.format(self.respaldo),
+                                           'USD')
+
+    def Componente(self):
+        return str(self)
+
+    def toJSON(self):
+        item = model_to_dict(self, exclude=['orden'])
+        return item
+
+    class Meta:
+        ordering = ('orden', 'producto')
+        verbose_name = 'Componente de orden'
+        verbose_name_plural = 'Componentes de ordenes'
