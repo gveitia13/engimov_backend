@@ -318,7 +318,7 @@ class Orden(models.Model):
     tiempo_de_entrega = models.PositiveIntegerField('Tiempo de entrega máximo')
     nombre = models.CharField('Nombre(s)', max_length=200)
     apellidos = models.CharField('Apellidos', max_length=200)
-    # telefono_comprador = models.CharField('Teléfono del comprador', max_length=200)
+    telefono_comprador = models.CharField('Teléfono del comprador', max_length=200)
     correo = models.EmailField('Correo del comprador')
     detalles_direccion = models.TextField('Detalles de dirección', null=True, blank=True)
 

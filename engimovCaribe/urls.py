@@ -47,6 +47,7 @@ urlpatterns = [
     path('api/', include('core.urls')),
     path('api/', include('sections.urls')),
     path('api/cart/', include('app_cart.urls')),
+    path('', include('app_tropipay.urls')),
 ]
 if settings.DEBUG:
     urlpatterns += staticfiles_urlpatterns()

@@ -3,7 +3,7 @@ from django.contrib import admin
 from solo.admin import SingletonModelAdmin
 
 from .models import IndexSection, AboutUsSection, ProductsPortfolioSection, WorksPortfolioSection, WorkWithUsSection, \
-    ContactUsSection, SellProductsSection, AboutUsSectionPerks, TermsAndPrivacyPolice, TropipayConfig
+    ContactUsSection, SellProductsSection, AboutUsSectionPerks, TermsAndPrivacyPolice
 
 
 class AboutUsSectionPerksInline(admin.StackedInline):
@@ -22,11 +22,6 @@ class BaseSectionAdmin(SingletonModelAdmin):
 
 class AboutUsSectionAdmin(BaseSectionAdmin):
     inlines = [AboutUsSectionPerksInline, ]
-
-
-@admin.register(TropipayConfig)
-class TropipayConfigAdmin(SingletonModelAdmin):
-    pass
 
 
 admin.site.register(IndexSection, BaseSectionAdmin)

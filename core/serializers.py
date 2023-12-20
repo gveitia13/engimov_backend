@@ -3,7 +3,7 @@ from rest_framework import serializers
 from engimovCaribe.utils import traducir_por_defecto
 from .models import ProductCategory, WorkCategory, Product, Work, Testimonial, EnterpriseAditionalContact, \
     EnterpriseData, Contact, TermsOfUse, PrivacyPolicy, JobOffer, JobOfferPool, CommercialJobOffer, DeliveryPrice, \
-    DeliveryPlace
+    DeliveryPlace, ComponenteOrden, Orden
 
 
 class ProductCategorySerializer(serializers.ModelSerializer):
@@ -134,4 +134,18 @@ class JobOfferPoolSerializer(serializers.ModelSerializer):
 class CommercialJobOfferSerializer(serializers.ModelSerializer):
     class Meta:
         model = CommercialJobOffer
+        fields = '__all__'
+
+
+class ComponenteOrdenSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ComponenteOrden
+        fields = '__all__'
+
+
+class OrdenSerializer(serializers.ModelSerializer):
+    componente_orden = ComponenteOrdenSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Orden
         fields = '__all__'

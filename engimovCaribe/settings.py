@@ -64,6 +64,7 @@ INSTALLED_APPS = [
     'core.apps.CoreConfig',
     'sections.apps.SectionsConfig',
     'app_cart',
+    'app_tropipay',
     # third party apps
     'django_q',
     'django_cleanup',
@@ -95,7 +96,7 @@ JAZZMIN_SETTINGS = {
     'copyright': '',
     "order_with_respect_to": ["core", 'sections', 'core.enterprisedata', 'core.ProductCategory', 'core.product',
                               'core.WorkCategory', 'core.work', 'core.JobOffer', 'core.JobOfferPool',
-                              'core.CommercialJobOffer'],
+                              'core.CommercialJobOffer', 'sections', 'app_tropipay'],
 }
 
 CKEDITOR_CONFIGS = {
@@ -142,7 +143,7 @@ ROOT_URLCONF = 'engimovCaribe.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS':  [os.path.join(BASE_DIR, 'templates')]
+        'DIRS': [os.path.join(BASE_DIR, 'templates')]
         ,
         'APP_DIRS': True,
         'OPTIONS': {
@@ -179,7 +180,7 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         # 'NAME': BASE_DIR / 'database/db.sqlite3',
-        'NAME':  os.path.join(BASE_DIR, 'database/db.sqlite3'),
+        'NAME': os.path.join(BASE_DIR, 'database/db.sqlite3'),
     }
 }
 
@@ -287,11 +288,11 @@ Q_CLUSTER = {
 }
 
 # DJANGO SOLO
-SOLO_ADMIN_SKIP_OBJECT_LIST_PAGE = True
-SOLO_CACHE_TIMEOUT = 60 * 5  # 5 mins
-SOLO_CACHE = 'local'
-SOLO_CACHE_PREFIX = 'solo'
-DATA_UPLOAD_MAX_NUMBER_FIELDS = 10240
+# SOLO_ADMIN_SKIP_OBJECT_LIST_PAGE = True
+# SOLO_CACHE_TIMEOUT = 60 * 5  # 5 mins
+# SOLO_CACHE = 'local'
+# SOLO_CACHE_PREFIX = 'solo'
+# DATA_UPLOAD_MAX_NUMBER_FIELDS = 10240
 
 CKEDITOR_UPLOAD_PATH = "richdata/"
 CKEDITOR_CONFIGS = {
