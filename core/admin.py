@@ -1,7 +1,7 @@
 from django.contrib import admin
 from .models import ProductCategory, WorkCategory, Product, Work, Testimonial, EnterpriseData, \
     EnterpriseAditionalContact, Contact, TermsOfUse, PrivacyPolicy, JobOffer, JobOfferPool, CommercialJobOffer, \
-    DeliveryPlace, DeliveryPrice
+    DeliveryPlace, DeliveryPrice, Orden, ComponenteOrden
 from solo.admin import SingletonModelAdmin
 from django.utils.translation import gettext_lazy as _
 
@@ -39,7 +39,7 @@ class WorkCategoryAdmin(admin.ModelAdmin):
 class ProductAdmin(admin.ModelAdmin):
     list_display = ('sku', 'name', 'category', 'price', 'is_sale', 'visible')
     list_filter = ('category', 'visible', 'is_sale')
-    search_fields = ( 'name',)
+    search_fields = ('name',)
     list_editable = ('is_sale', 'visible')
     ordering = ('-visible', '-is_sale')
     list_per_page = 15
@@ -100,6 +100,16 @@ class JobOfferPoolAdmin(admin.ModelAdmin):
 class CommercialJobOfferAdmin(admin.ModelAdmin):
     list_display = ('job_offer', 'name', 'email', 'is_checked')
     list_editable = ('is_checked',)
+
+
+@admin.register(Orden)
+class OrdenAdmin(admin.ModelAdmin):
+    pass
+
+
+@admin.register(ComponenteOrden)
+class ComponenteOrdenAdmin(admin.ModelAdmin):
+    pass
 
 
 admin.site.register(TermsOfUse, SingletonModelAdmin)

@@ -4,7 +4,7 @@ from app_tropipay.views import pay, cancel_order, fail_order, tpp_verificar, tpp
 
 urlpatterns = [
     # Tropipay urls
-    path('pagar/', pay, name='pagar'),
+    path('pay/', pay, name='pagar'),
     path('tropipay/verificar/', tpp_verificar, name='tpp_verificar'),
     path('tropipay/success/', tpp_success, name='tpp_success'),
     path('tropipay/fails/', fail_order, name='orden-fail'),

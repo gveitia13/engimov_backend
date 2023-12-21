@@ -23,12 +23,17 @@ from core.serializers import OrdenSerializer
 @api_view(['POST'])
 def pay(request):
     if request.method == 'POST':
+        print('llego')
         if EnterpriseData.objects.all()[0].checkout_allowed == True and TropipayConfig.objects.exists():
+            print('llego2')
             tropipay_config: TropipayConfig = TropipayConfig.objects.first()
             purchase_data = json.loads(request.body.decode('utf-8'))
-            purchase_data['cart_id'] = request.headers.get('X-Session-ID')
+            purchase_data['cart_id'] = request.headers.get('Cart-Id')
+            print(purchase_data)
+            # try:
             orden: (Orden | None) = create_order(purchase_data, **{})
             if orden:
+                print('llego3')
                 mensaje = create_message_order(request, orden)
                 conn = http.client.HTTPSConnection("" + tropipay_config.tpp_url + "")
                 # genera un request json
@@ -97,7 +102,9 @@ def pay(request):
                     orden.link_de_pago = retorno
                     orden.total = float('{:.2f}'.format(orden_total)) / 100
                     orden.save()
-                    return Response({'payment_link': orden.link_de_pago})
+                    return Response(data={'payment_link': orden.link_de_pago}, status=status.HTTP_200_OK)
+            else:
+                return Response(status=status.HTTP_400_BAD_REQUEST)
         else:
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
@@ -173,7 +180,8 @@ def create_order(purchase_data, **kwargs):
     # taza_cambio = 1 if moneda == 'CUP' else EnterpriseData.objects.all().first().taza_cambio
     tiempo_de_entrega = 0
     if cart.get_all():
-        pks = [prod.sku for prod in cart.get_all()]
+        print(cart.get_all())
+        pks = [prod['sku'] for prod in cart.get_all()]
         products = Product.objects.filter(pk__in=pks)
         # Pastilla
         total += cart.get_total()
@@ -185,7 +193,7 @@ def create_order(purchase_data, **kwargs):
         orden = Orden(total=float(total), precio_envio=0, status='2', nombre=nombre, apellidos=apellidos,
                       detalles_direccion=detalles_direccion, tiempo_de_entrega=tiempo_de_entrega, correo=correo,
                       telefono_comprador=telefono_comprador)
-        # orden.save()
+        orden.save()
         for c in products:
             ComponenteOrden.objects.create(orden=orden, producto=c,
                                            respaldo=float(
